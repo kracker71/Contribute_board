@@ -1,0 +1,15 @@
+.LeaderboardTitle {
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+.facebookGroup .groupName {
+  margin-top: -0.75rem;
+}
+
+.facebookGroup .logo {
+  width: 38px;
+  height: 38px;
+  margin-left: 10px;
+  margin-bottom: 5px;
+}

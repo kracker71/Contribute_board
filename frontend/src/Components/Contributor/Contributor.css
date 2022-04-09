@@ -1,0 +1,8 @@
+.Contributor {
+  font-size: 1.25rem;
+}
+
+.Contributor .profile {
+  height: 70px;
+  width: 70px;
+}
