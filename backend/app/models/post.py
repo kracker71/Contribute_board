@@ -1,6 +1,6 @@
 from uuid import uuid4
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import  Column, ForeignKey, String, Date, Float, Int
+from sqlalchemy import  Column, ForeignKey, String, Date, Float, Integer
 from sqlalchemy.orm import relationship
 from ..database.init_db import Base
 
@@ -14,7 +14,7 @@ class Post(Base):
     date_scrape = Column(Date)
     date_post = Column(Date)
     post_score = Column(Float)
-    post_likes = Column(Int)
+    post_likes = Column(Integer)
     
     user_id = Column(UUID(as_uuid=True), ForeignKey("user.user_id"))
     user_post_owner = relationship("User", back_populates="user_contain_post")
