@@ -1,0 +1,18 @@
+anyio==3.5.0
+asgiref==3.5.0
+certifi==2021.10.8
+click @ file:///D:/bld/click_1648793645790/work
+colorama @ file:///home/conda/feedstock_root/build_artifacts/colorama_1602866480661/work
+fastapi==0.75.1
+greenlet==1.1.2
+h11==0.13.0
+idna==3.3
+psycopg2 @ file:///C:/ci/psycopg2_1594305172475/work
+pydantic==1.9.0
+python-dotenv @ file:///home/conda/feedstock_root/build_artifacts/python-dotenv_1648162816482/work
+sniffio==1.2.0
+SQLAlchemy==1.4.35
+starlette==0.17.1
+typing_extensions==4.1.1
+uvicorn==0.17.6
+wincertstore==0.2
