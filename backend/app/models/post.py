@@ -1,18 +1,20 @@
 from uuid import uuid4
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import  Column, String, Date, Float
+from sqlalchemy import  Column, String, Date, Float, Int
 from sqlalchemy.orm import relationship
 from ..database.init_db import Base
 
 
-class Client(Base):
-    __tablename__ = "user"
+class Post(Base):
+    __tablename__ = "post"
 
-    user_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    name = Column(String(100))
-    user_score = Column(Float)
-    update_score_date = Column(Date)
-    profile_picture_url = Column(String(2048))
+    post_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    post_data = Column(String(2048))
+    post_url = Column(String(2048))
+    date_scrape = Column(Date)
+    date_post = Column(Date)
+    post_score = Column(Float)
+    likes = Column(Int)
     
-
-    # pets = relationship("Pet", back_populates="owner")
+    user_id = Column(UUID(as_uuid=True), ForeignKey("user.user_id"))
+    owner = relationship("User", back_populates="contain_post")

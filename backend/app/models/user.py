@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 from ..database.init_db import Base
 
 
-class Client(Base):
+class User(Base):
     __tablename__ = "user"
 
     user_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
@@ -15,4 +15,4 @@ class Client(Base):
     profile_picture_url = Column(String(2048))
     
 
-    # pets = relationship("Pet", back_populates="owner")
+    contain_post = relationship("Post", back_populates="owner")
