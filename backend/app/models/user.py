@@ -14,5 +14,6 @@ class User(Base):
     update_score_date = Column(Date)
     profile_picture_url = Column(String(2048))
     
-
-    contain_post = relationship("Post", back_populates="owner")
+    
+    user_contain_post = relationship("Post", back_populates="user_post_owner")
+    user_contain_comment = relationship("Comment", back_populates='user_comment_owner')
