@@ -8,7 +8,7 @@ from ..database.init_db import Base
 class Post(Base):
     __tablename__ = "post"
 
-    post_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    post_id = Column(String(100), primary_key=True)
     post_data = Column(String(2048))
     post_url = Column(String(2048))
     date_scrape = Column(Date)
