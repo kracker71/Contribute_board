@@ -13,10 +13,10 @@ services:
     ports:
       - 5432:5432
 
-  web:
-    build:
-      context: ./
-    ports:
-      - 8000:8000
+  # web:
+  #   build:
+  #     context: ./
+  #   ports:
+  #     - 8000:8000
 volumes:
   database-storage:
