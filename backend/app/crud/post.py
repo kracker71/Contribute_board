@@ -37,21 +37,28 @@ def get_post_url_by_id(id, db:Session):
     post = db.query(Post).filter(Post.post_id == id)
     if not post.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"not found a user with an id {id}")
+                            detail=f"not found a post with an id {id}")
     return post.options(load_only("post_url")).one()
+
+def get_post_id_by_url(url, db:Session):
+    post = db.query(Post).filter(Post.post_url == url)
+    if not post.first():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"not found a post with a url {url}")
+    return post.options(load_only("post_id")).one()
 
 def get_post_by_id(id, db:Session):
     post = db.query(Post).filter(Post.post_id == id).first()
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"not found a user with an id {id}")
+                            detail=f"not found a post with an id {id}")
     return post
 
 def get_post_by_user_id(user_url, db:Session):
     post = db.query(Post).filter(Post.user_url == user_url)
     if not post.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"not found a user with an id {id}")
+                            detail=f"not found a post with an id {id}")
     return post.all()
 
 def get_post_score_by_user_id(user_url, db:Session):
@@ -65,7 +72,7 @@ def update_post_by_id(id, request:PostEdit, db:Session):
     post = db.query(Post).filter(Post.post_id == id)
     if not post.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"not found a user with an id {id}")
+                            detail=f"not found a post with an id {id}")
     post.update(request.__dict__,synchronize_session="fetch")
     db.commit()
     return {'updated'}
@@ -75,7 +82,7 @@ def del_post_by_id(id, db:Session):
     post = db.query(Post).filter(Post.post_id == id)
     if not post.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"not found a user with an id {id}")
+                            detail=f"not found a post with an id {id}")
     post.update(synchronize_session=False)
     db.commit()
     return {'deleted'}
