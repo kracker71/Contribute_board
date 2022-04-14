@@ -15,6 +15,7 @@ class Post(Base):
     date_post = Column(Date)
     post_score = Column(Float)
     post_likes = Column(Integer)
+    user_url = Column(String(2048))
     
     user_id = Column(UUID(as_uuid=True), ForeignKey("user.user_id"))
     user_post_owner = relationship("User", back_populates="user_contain_post")
