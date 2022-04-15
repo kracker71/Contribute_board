@@ -14,7 +14,8 @@ class Comment(Base):
     date_comment = Column(Date)
     comment_likes = Column(Integer)
     comment_score = Column(Float)
-    
+    user_url = Column(String(2048))
+    post_url = Column(String(2048))
     
     user_id = Column(UUID(as_uuid=True), ForeignKey("user.user_id"))
     post_id = Column(String(100), ForeignKey("post.post_id"))
