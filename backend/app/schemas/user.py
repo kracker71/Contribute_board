@@ -1,5 +1,6 @@
 from typing import List, Optional
 from datetime import date
+from uuid import UUID
 from pydantic import BaseModel
 
 #update_score_base
@@ -22,6 +23,8 @@ class UserEditProfile(BaseModel):
     
 class ShowUser(BaseModel):
     name:str
+    profile_picture_url:str
+    profile_url:str
     user_score:Optional[float] = 0 
     update_score_date:date
     class Config:
