@@ -17,8 +17,9 @@ get_db = init_db.get_db
 async def user_create(request:UserRegister,db:Session = Depends(get_db)):
     return create_user(request,db)
 
+
 @router.get("/all",response_model=List[ShowUser])
-async def get_user_by_ID (db:Session = Depends(get_db)):
+async def get_all_User (db:Session = Depends(get_db)):
     return get_all_user(db)
 
 @router.get("/{id}",response_model=ShowUser)
@@ -34,11 +35,11 @@ async def get_score_by_Rank (db:Session = Depends(get_db)):
     return get_score_by_ranking(db)
 
 @router.put("/update/score/{id}",status_code=status.HTTP_202_ACCEPTED)
-async def updata_score_by_ID(id,request:UserEditScore,db :Session = Depends(get_db)):
+async def update_score_by_ID(id,request:UserEditScore,db :Session = Depends(get_db)):
     return update_user_score_by_id(id,request,db)
 
 @router.put("/update/profile/{id}",status_code=status.HTTP_202_ACCEPTED)
-async def updata_profile_by_ID(id,request:UserEditProfile,db :Session = Depends(get_db)):
+async def update_profile_by_ID(id,request:UserEditProfile,db :Session = Depends(get_db)):
     return update_user_profile_by_id(id,request,db)
 
 @router.delete("/delete/{id}",status_code=status.HTTP_204_NO_CONTENT)
