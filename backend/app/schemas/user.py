@@ -14,7 +14,7 @@ class UserRegister(UserBase):
     update_score_date:date
     
 class UserEditScore(BaseModel):
-    user_score:float
+    # user_score:float
     update_score_date:date
     
 class UserEditProfile(BaseModel):
