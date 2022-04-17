@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from typing import List
-from app.crud.comment import create_comment,get_comment_by_id,get_all_comment_by_user_id,get_total_score_by_user_id,get_all_comment_by_post_id,update_comment_by_id,del_comment_by_id
+from app.crud.comment import create_comment,get_comment_by_id,get_all_comment_by_post_id,update_comment_by_id,del_comment_by_id
 from app.database import init_db
 from sqlalchemy.orm import Session
 from app.schemas.comment import CommentCreate,CommentEdit,ShowComment
@@ -23,17 +23,13 @@ async def add_comment(request: CommentCreate, db: Session = Depends(get_db)):
 async def get_by_comment_id(id,db:Session = Depends(get_db)):
     return get_comment_by_id(id,db)
 
-@router.get('/user/{user_url}',response_model=List[ShowComment])
-async def get_by_user_id(user_url,db:Session = Depends(get_db)):
-    return get_all_comment_by_user_id(user_url,db)
+
 
 @router.get('/post/{post_id}',response_model=List[ShowComment])
 async def get_score_by_user_id(post_id,db:Session = Depends(get_db)):
     return get_all_comment_by_post_id(post_id,db)
 
-@router.get('/totalscore/{id}')
-async def get_total_score(id,db:Session = Depends(get_db)):
-    return get_total_score_by_user_id(id,db)
+
 
 @router.put('/update/{id}',status_code=status.HTTP_202_ACCEPTED)
 async def update_comment_by_ID(id,request:CommentEdit,db:Session = Depends(get_db)):

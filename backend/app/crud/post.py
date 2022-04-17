@@ -54,19 +54,7 @@ def get_post_by_id(id, db:Session):
                             detail=f"not found a post with an id {id}")
     return post
 
-def get_post_by_user_id(user_url, db:Session):
-    post = db.query(Post).filter(Post.user_url == user_url)
-    if not post.first():
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"not found a post with an id {id}")
-    return post.all()
 
-def get_post_score_by_user_id(user_url, db:Session):
-    post = get_post_by_user_id(user_url,db)
-    score = 0.0
-    for x in post:
-        score += x.post_score 
-    return score
 
 def update_post_by_id(id, request:PostEdit, db:Session):
     post = db.query(Post).filter(Post.post_id == id)

@@ -3,9 +3,10 @@ from sqlalchemy.orm import Session
 from app.models.comment import Comment
 from app.models.user import User
 from app.models.post import Post
-from app.crud.user import get_user_by_id
 from app.crud.post import get_post_id_by_url
+from app.crud.user import get_user_by_id
 from app.schemas.comment import CommentCreate,CommentEdit
+
  
 def create_comment(request:CommentCreate,db:Session):
     
@@ -37,11 +38,7 @@ def get_comment_by_id(id,db:Session):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"not found a comment with an id: {id}")
     return comment
 
-def get_all_comment_by_user_id(id,db:Session):
-    user = db.query(User).filter(User.profile_url == id).first()
-    if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"not found a user with an id: {id}")
-    return db.query(Comment).filter(Comment.user_url == id).all()
+
 
 def get_all_comment_by_post_id(id,db:Session):
     post = db.query(Post).filter(Post.post_id == id).first()
@@ -49,12 +46,7 @@ def get_all_comment_by_post_id(id,db:Session):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"not found a post with an id: {id}")
     return db.query(Comment).filter(Comment.post_id == id).all()
 
-def get_total_score_by_user_id(id,db:Session):
-    comment = get_all_comment_by_user_id(id,db)
-    score = 0.0
-    for x in comment:
-        score+= x.comment_score
-    return score
+
 
 def update_comment_by_id(commentID,request:CommentEdit,db:Session):
     comment = db.query(Comment).filter(Comment.comment_id == commentID)
