@@ -3,8 +3,11 @@ from fastapi import APIRouter, HTTPException, Depends, status
 from app.database import init_db
 from sqlalchemy.orm import Session
 from app.schemas.user import ShowUser, UserRegister,UserEditScore, UserEditProfile
-from app.crud.user import create_user,get_user_by_id, get_score_by_name, get_score_by_ranking, update_user_profile_by_id, update_user_score_by_id, del_user_by_id,get_all_user
-
+from app.schemas.post import ShowPost
+from app.schemas.comment import ShowComment
+from app.crud.user import create_user,get_user_by_id, get_score_by_name, get_score_by_ranking, update_user_profile_by_id, update_user_score_by_id, del_user_by_id,get_all_user,update_all_user_score
+from app.crud.user import get_post_by_user_id,get_post_score_by_user_id
+from app.crud.user import get_all_comment_by_user_id,get_total_score_by_user_id
 
 router = APIRouter(
     prefix="/user",
@@ -34,6 +37,10 @@ async def get_score_by_Name (db:Session = Depends(get_db)):
 async def get_score_by_Rank (db:Session = Depends(get_db)):
     return get_score_by_ranking(db)
 
+@router.put("/update/score/all",status_code=status.HTTP_202_ACCEPTED)
+async def update_all_user_Score(request:UserEditScore,db :Session = Depends(get_db)):
+    return update_all_user_score(request,db)
+
 @router.put("/update/score/{id}",status_code=status.HTTP_202_ACCEPTED)
 async def update_score_by_ID(id,request:UserEditScore,db :Session = Depends(get_db)):
     return update_user_score_by_id(id,request,db)
@@ -45,3 +52,23 @@ async def update_profile_by_ID(id,request:UserEditProfile,db :Session = Depends(
 @router.delete("/delete/{id}",status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user_by_id(id,db:Session = Depends(get_db)):
     return del_user_by_id(id,db)
+
+#####post section#####
+
+@router.get('/post/{user_url}',response_model=List[ShowPost])
+async def get_by_user_id(user_url,db:Session = Depends(get_db)):
+    return get_post_by_user_id(user_url,db)
+
+@router.get('/post/score/{user_url}')
+async def get_score_by_user_id(user_url,db:Session = Depends(get_db)):
+    return get_post_score_by_user_id(user_url,db)
+
+#####comment section#####
+
+@router.get('/comment/{user_url}',response_model=List[ShowComment])
+async def get_by_user_id(user_url,db:Session = Depends(get_db)):
+    return get_all_comment_by_user_id(user_url,db)
+
+@router.get('/comment/totalscore/{id}')
+async def get_total_score(id,db:Session = Depends(get_db)):
+    return get_total_score_by_user_id(id,db)
