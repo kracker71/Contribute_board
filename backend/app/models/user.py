@@ -13,6 +13,7 @@ class User(Base):
     user_score = Column(Float)
     update_score_date = Column(Date)
     profile_picture_url = Column(String(2048))
+    profile_url = Column(String(2048))
     
     
     user_contain_post = relationship("Post", back_populates="user_post_owner")
