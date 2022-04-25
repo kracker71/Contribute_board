@@ -1,7 +1,19 @@
 import React, { Component } from "react";
+import "./RewardModal.css";
 import { Modal, Button } from "react-bootstrap";
 import RewardTitle from "../RewardTitle/RewardTitle";
 import RewardList from "../RewardList/RewardList";
+import rewardImg from "./reward.png";
+
+const rewardList = [];
+
+for (let i = 1; i <= 3; i++) {
+  const rewardInfo = {
+    img: rewardImg,
+    desc: `ของรางวัล ${i}`,
+  };
+  rewardList.push(rewardInfo);
+}
 
 class RewardModal extends Component {
   constructor(props) {
@@ -33,7 +45,7 @@ class RewardModal extends Component {
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <RewardList />
+            <RewardList rewardList={rewardList} />
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleClose}>

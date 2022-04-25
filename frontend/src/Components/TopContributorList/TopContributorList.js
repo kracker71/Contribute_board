@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import TopContributor from "../TopContributor/TopContributor";
-import "./TopContributorList.css";
 
 class TopContributorList extends Component {
   render() {

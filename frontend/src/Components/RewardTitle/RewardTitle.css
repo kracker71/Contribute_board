@@ -1,4 +1,6 @@
-.RewardTitle {
-  text-align: center;
-  font-size: 30px;
+.rewardTitle {
+  margin-top: -7.5px;
+}
+.date {
+  margin-top: -15px;
 }
