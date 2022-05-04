@@ -1,13 +1,29 @@
 @font-face {
-  font-family: Kanit-Regular;
+  font-family: Kanit;
+  src: url("../public/fonts/Kanit-Medium.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Kanit;
   src: url("../public/fonts/Kanit-Regular.ttf");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Kanit;
+  src: url("../public/fonts/Kanit-SemiBold.ttf");
+  font-weight: 500;
+  font-style: normal;
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, Kanit-Regular, BlinkMacSystemFont, "Segoe UI",
-    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-    "Helvetica Neue", sans-serif;
+  font-family: -apple-system, Kanit, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
