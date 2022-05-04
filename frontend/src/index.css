@@ -1,22 +1,16 @@
 @font-face {
   font-family: Kanit;
   src: url("../public/fonts/Kanit-Medium.ttf");
-  font-weight: normal;
-  font-style: normal;
 }
 
 @font-face {
-  font-family: Kanit;
+  font-family: Kanit-Regular;
   src: url("../public/fonts/Kanit-Regular.ttf");
-  font-weight: 300;
-  font-style: normal;
 }
 
 @font-face {
-  font-family: Kanit;
+  font-family: Kanit-SemiBold;
   src: url("../public/fonts/Kanit-SemiBold.ttf");
-  font-weight: 500;
-  font-style: normal;
 }
 
 body {
