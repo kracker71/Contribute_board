@@ -3,7 +3,7 @@
   text-align: center;
 }
 
-.facebookGroup {
+.facebook-group {
   font-size: 24px;
 }
 
@@ -22,9 +22,27 @@
   margin-top: -20px;
 }
 
-.facebookGroup .logo {
+.facebook-group .logo {
   width: 36px;
   height: 36px;
   margin-left: 10px;
   margin-bottom: 5px;
+}
+
+.background {
+  position: relative;
+  height: 825px;
+  background-image: url("../../../public/images/bg\ poker\ thailand.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.background-filter {
+  position: relative;
+  height: 825px;
+  background-color: rgba(17, 0, 31, 0.85);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
