@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import "./RewardModal.css";
 import { Modal, Button } from "react-bootstrap";
-import RewardTitle from "../RewardTitle/RewardTitle";
 import RewardList from "../RewardList/RewardList";
 import rewardImg from "./reward.png";
 
@@ -38,18 +37,20 @@ class RewardModal extends Component {
           ของรางวัล
         </Button>
 
-        <Modal show={this.state.show} onHide={this.handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>
-              <RewardTitle />
-            </Modal.Title>
+        <Modal
+          dialogClassName="modal-90w"
+          show={this.state.show}
+          onHide={this.handleClose}
+        >
+          <Modal.Header>
+            <Modal.Title>ของรางวัล ประจำเดือน พฤษภาคม 2565</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <RewardList rewardList={rewardList} />
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={this.handleClose}>
-              Close
+              ปิด
             </Button>
           </Modal.Footer>
         </Modal>
