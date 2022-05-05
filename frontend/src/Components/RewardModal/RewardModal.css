@@ -10,3 +10,12 @@
 .modal-title {
   height: 75px;
 }
+
+.btn-custom {
+  font-size: 20px;
+  border-radius: 50px;
+  background: linear-gradient(260.26deg, #fff400 9.39%, #fe9502 78.41%);
+  background-size: 200% auto;
+  background-position: center;
+  padding: 5px 30px;
+}

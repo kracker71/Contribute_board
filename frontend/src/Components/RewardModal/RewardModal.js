@@ -34,7 +34,7 @@ class RewardModal extends Component {
   render() {
     return (
       <div className="RewardModal">
-        <Button variant="primary" onClick={this.handleShow}>
+        <Button variant="custom" onClick={this.handleShow}>
           ของรางวัล
         </Button>
 
