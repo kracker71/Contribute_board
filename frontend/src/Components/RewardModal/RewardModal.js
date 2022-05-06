@@ -42,6 +42,7 @@ class RewardModal extends Component {
           dialogClassName="modal-90w"
           show={this.state.show}
           onHide={this.handleClose}
+          centered
         >
           <Modal.Header>
             <Modal.Title>ของรางวัลประจำเดือน พฤษภาคม 2565</Modal.Title>
