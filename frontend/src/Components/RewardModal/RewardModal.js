@@ -38,12 +38,13 @@ class RewardModal extends Component {
         </Button>
 
         <Modal
+          className="reward-modal"
           dialogClassName="modal-90w"
           show={this.state.show}
           onHide={this.handleClose}
         >
           <Modal.Header>
-            <Modal.Title>ของรางวัล ประจำเดือน พฤษภาคม 2565</Modal.Title>
+            <Modal.Title>ของรางวัลประจำเดือน พฤษภาคม 2565</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <RewardList rewardList={rewardList} />
