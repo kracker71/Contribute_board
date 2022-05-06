@@ -1,13 +1,8 @@
 .TopContributor {
-  margin: 0 auto;
+  margin: 100px auto;
   text-align: center;
   color: white;
 }
-
-/* .second,
-.third {
-  margin-top: 2.3rem;
-} */
 
 .TopContributor .rank {
   font-family: Kanit-SemiBold;
@@ -33,4 +28,31 @@
 .first .profile {
   width: 160px;
   height: 160px;
+}
+
+.first {
+  margin-top: 75px;
+}
+
+.first .profile {
+  border: 7px solid #fff400;
+  box-shadow: 0px 0px 25px 7px rgba(255, 244, 2, 0.25);
+}
+
+.second .profile {
+  border: 7px solid #53e7fa;
+  box-shadow: 0px 0px 25px 7px rgba(0, 226, 255, 0.25);
+}
+
+.third .profile {
+  border: 7px solid #ff9efa;
+  box-shadow: 0px 0px 25px 7px rgba(255, 158, 250, 0.25);
+}
+
+.second {
+  margin-right: -250px;
+}
+
+.third {
+  margin-left: -250px;
 }

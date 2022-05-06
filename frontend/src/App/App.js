@@ -12,7 +12,7 @@ class App extends Component {
           <div className="background-filter">
             {/* <NavigationBar /> */}
             <LeaderboardTitle />
-            {/* <Leaderboard /> */}
+            <Leaderboard />
           </div>
         </div>
       </div>
