@@ -1,34 +1,36 @@
 .TopContributor {
   margin: 0 auto;
   text-align: center;
-  font-size: 1.5rem;
+  color: white;
 }
 
-.second,
+/* .second,
 .third {
   margin-top: 2.3rem;
+} */
+
+.TopContributor .rank {
+  font-family: Kanit-SemiBold;
+  font-size: 24px;
 }
 
-.second {
-  margin-right: 2rem;
+.TopContributor .name {
+  font-family: Kanit-SemiBold;
+  font-size: 20px;
 }
 
-.third {
-  margin-left: 2rem;
+.TopContributor .point {
+  font-size: 20px;
 }
 
 .TopContributor .profile {
-  width: 120px;
-  height: 120px;
+  width: 135px;
+  height: 135px;
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
 
-.first {
-  font-size: 1.72rem;
-}
-
 .first .profile {
-  width: 150px;
-  height: 150px;
+  width: 160px;
+  height: 160px;
 }

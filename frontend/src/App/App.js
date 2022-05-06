@@ -9,7 +9,7 @@ class App extends Component {
       <div>
         {/* <NavigationBar /> */}
         <LeaderboardTitle />
-        {/* <Leaderboard /> */}
+        <Leaderboard />
       </div>
     );
   }
