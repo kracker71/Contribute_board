@@ -1,5 +1,7 @@
 import React, { Component } from "react";
+import "./ContributorList.css";
 import Contributor from "../Contributor/Contributor.js";
+import { Container, Row, Col } from "react-bootstrap";
 
 class ContributorList extends Component {
   render() {
@@ -7,18 +9,8 @@ class ContributorList extends Component {
       return <Contributor info={contributor} />;
     });
     return (
-      <div className="table-responsive">
-        <table className="table table-light align-middle">
-          <thead className="table-dark">
-            <tr>
-              <th className="col-1">#</th>
-              <th className="col-1">Profile</th>
-              <th className="col-8">Name</th>
-              <th className="col-2">Points</th>
-            </tr>
-          </thead>
-          <tbody>{contributorList}</tbody>
-        </table>
+      <div className="ContributorList">
+        <Container>{contributorList}</Container>
       </div>
     );
   }

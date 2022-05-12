@@ -1,8 +1,39 @@
-.Contributor {
-  font-size: 1.25rem;
+.Contributor .row {
+  display: flex;
+  align-items: center;
+  width: 760px;
+  height: 55px;
+  background-color: transparent;
+  border: 1px solid #6a0085;
+  border-radius: 50px;
+  font-size: 18px;
+  color: white;
+  margin: 5px auto;
+}
+
+.Contributor .rank,
+.Contributor .profile,
+.Contributor .name,
+.Contributor .point {
+  padding: 0 5px;
+}
+
+.Contributor .rank {
+  font-family: Kanit-SemiBold;
+  text-align: center;
 }
 
 .Contributor .profile {
-  height: 70px;
-  width: 70px;
+  display: flex;
+  height: 45px;
+  justify-content: center;
+}
+
+.Contributor .name {
+}
+
+.Contributor .point {
+  font-family: Kanit-SemiBold;
+  text-align: right;
+  padding-right: 20px;
 }
