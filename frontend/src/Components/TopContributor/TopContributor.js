@@ -10,9 +10,18 @@ class TopContributor extends Component {
           src={this.props.info.image}
           alt={this.props.info.name}
         />
-        <p className="rank">{this.props.info.rank}</p>
-        <p className="name">{this.props.info.name}</p>
-        <p className="point">{this.props.info.point}</p>
+        <div className="rank-spade">
+          <div className="spade">
+            <div className="shape">
+              <span className="heart">
+                <span className="tale"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="rank">{this.props.info.rank}</div>
+        <div className="name">{this.props.info.name}</div>
+        <div className="point">{this.props.info.point}</div>
       </div>
     );
   }
