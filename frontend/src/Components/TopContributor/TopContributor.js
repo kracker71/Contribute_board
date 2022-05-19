@@ -6,7 +6,7 @@ class TopContributor extends Component {
     return (
       <div className={"TopContributor " + this.props.place}>
         <img
-          className="profile rounded-circle"
+          className="profile"
           src={this.props.info.image}
           alt={this.props.info.name}
         />
