@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import "./TopContributor.css";
+import crownImg from "./crown.png";
 
 class TopContributor extends Component {
   render() {
     return (
       <div className={"TopContributor " + this.props.place}>
+        <img className="crown" src={crownImg} alt="crown" />
         <img
           className="profile"
           src={this.props.info.image}

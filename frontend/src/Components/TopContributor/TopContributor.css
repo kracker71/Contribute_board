@@ -83,6 +83,15 @@
   margin-left: -250px;
 } */
 
+.crown {
+  display: none;
+}
+
+.first .crown {
+  display: block;
+  margin: 0 auto 10px;
+}
+
 .spade {
   margin-bottom: -28px;
 }
