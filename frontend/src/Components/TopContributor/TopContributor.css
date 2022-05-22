@@ -1,5 +1,5 @@
 .TopContributor {
-  margin: 100px auto;
+  margin: 200px auto;
   text-align: center;
 }
 
@@ -72,7 +72,7 @@
 }
 
 .first {
-  margin-top: 24px;
+  margin-top: 125px;
   background-image: url("../../../public/images/big_star.png");
   background-size: 100%;
   background-repeat: no-repeat;
