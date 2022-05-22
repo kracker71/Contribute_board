@@ -9,8 +9,8 @@ for (let i = 1; i <= 10; i++) {
   allContributorList.push({
     rank: i,
     image: profileImg,
-    name: "Chavalvit Keartnattakorn ชวัลวิทย์ เกียรติณัฐกร",
-    point: 1000,
+    name: "Chavalvit Keartnattakorn",
+    point: 20000,
   });
 }
 
@@ -22,7 +22,7 @@ class Leaderboard extends Component {
     return (
       <div>
         <TopContributorList contributor={topContributorList} />
-        <ContributorList contributor={contributorList} />
+        {/* <ContributorList contributor={contributorList} /> */}
       </div>
     );
   }

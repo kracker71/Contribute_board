@@ -1,34 +1,197 @@
 .TopContributor {
-  margin: 0 auto;
+  margin: 100px auto;
   text-align: center;
-  font-size: 1.5rem;
 }
 
-.second,
-.third {
-  margin-top: 2.3rem;
+.TopContributor .rank {
+  font-family: Kanit-SemiBold;
+  font-size: 20px;
+  color: black;
+  position: relative;
 }
 
-.second {
-  margin-right: 2rem;
+.TopContributor .name {
+  font-family: Kanit-SemiBold;
+  font-size: 20px;
+  color: white;
+  margin-top: 10px;
 }
 
-.third {
-  margin-left: 2rem;
+.TopContributor .point {
+  font-family: Kanit-SemiBold;
+  font-size: 20px;
+  margin-top: -5px;
 }
 
-.TopContributor .profile {
-  width: 120px;
-  height: 120px;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+.first .point {
+  background: linear-gradient(225.2deg, #fff400 24.56%, #fe9502 66.96%);
+  color: transparent;
+  background-clip: text;
 }
 
-.first {
-  font-size: 1.72rem;
+.second .point {
+  background: linear-gradient(205.07deg, #53e7fa 0.2%, #1e40bb 115.23%);
+  color: transparent;
+  background-clip: text;
+}
+
+.third .point {
+  background: linear-gradient(242.58deg, #eb4dee 25.03%, #ac32d7 84.34%);
+  color: transparent;
+  background-clip: text;
 }
 
 .first .profile {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  padding: 1px;
+  border: 6px solid transparent;
+  background-color: #fff400;
+  box-shadow: 0px 0px 25px 10px rgba(255, 244, 2, 0.25);
+}
+
+.second .profile {
   width: 150px;
   height: 150px;
+  border-radius: 50%;
+  padding: 1px;
+  border: 6px solid transparent;
+  background-color: #53e7fa;
+  box-shadow: 0px 0px 25px 10px rgba(0, 226, 255, 0.25);
+}
+
+.third .profile {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  padding: 1px;
+  border: 6px solid transparent;
+  background-color: #ff9efa;
+  box-shadow: 0px 0px 25px 10px rgba(255, 158, 250, 0.25);
+}
+
+.first {
+  margin-top: 24px;
+  background-image: url("../../../public/images/big_star.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.crown {
+  display: none;
+}
+
+.first .crown {
+  display: block;
+  margin: 0 auto 10px;
+}
+
+.spade {
+  margin-bottom: -28px;
+}
+
+.rank-spade {
+  margin-top: -25px;
+}
+
+/* spade css */
+
+.shape {
+  transform: rotate(180deg);
+}
+
+.heart {
+  display: inline-block;
+  height: 30px;
+  margin: 0 10px;
+  position: relative;
+  top: 0;
+  transform: rotate(-45deg);
+  width: 30px;
+}
+
+.heart:before,
+.heart:after {
+  content: "";
+  border-radius: 50%;
+  height: 30px;
+  position: absolute;
+  width: 30px;
+}
+
+.heart:before {
+  top: -15px;
+  left: 0;
+}
+
+.heart:after {
+  left: 15px;
+  top: 0;
+}
+
+.tale {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 20px solid;
+  transform: rotate(45deg);
+  position: absolute;
+  bottom: 20px;
+  right: -3px;
+}
+
+/* specific spade */
+
+.first .spade {
+  transform: scale(0.7);
+}
+
+.first .heart {
+  background-color: #fff400;
+}
+
+.first .heart:before,
+.first .heart:after {
+  background-color: #fff400;
+}
+
+.first .tale {
+  border-color: #fff400;
+}
+
+.second .spade {
+  transform: scale(0.65);
+}
+
+.second .heart {
+  background-color: #53e7fa;
+}
+
+.second .heart:before,
+.second .heart:after {
+  background-color: #53e7fa;
+}
+
+.second .tale {
+  border-color: #53e7fa;
+}
+
+.third .spade {
+  transform: scale(0.65);
+}
+
+.third .heart {
+  background-color: #ff9efa;
+}
+
+.third .heart:before,
+.third .heart:after {
+  background-color: #ff9efa;
+}
+
+.third .tale {
+  border-color: #ff9efa;
 }
