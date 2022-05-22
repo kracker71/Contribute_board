@@ -73,6 +73,10 @@
 
 .first {
   margin-top: 24px;
+  background-image: url("../../../public/images/big_star.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .crown {
@@ -91,6 +95,7 @@
 .rank-spade {
   margin-top: -25px;
 }
+
 /* spade css */
 
 .shape {
