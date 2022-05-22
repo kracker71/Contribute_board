@@ -6,3 +6,8 @@
 .navbar {
   font-size: 20px;
 }
+
+.navbar-collapse a {
+  margin-left: 15px;
+  margin-right: 15px;
+}
