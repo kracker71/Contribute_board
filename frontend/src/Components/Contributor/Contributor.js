@@ -6,21 +6,21 @@ class Contributor extends Component {
   render() {
     return (
       <div className="Contributor">
-        <Row lg={4}>
-          <Col className="rank" lg={1}>
+        <Row xs={4}>
+          <Col className="rank" xs={1} sm={1}>
             {this.props.info.rank}
           </Col>
-          <Col className="profile" lg={1}>
+          <Col className="profile" xs={1} sm={1}>
             <img
               className="rounded-circle"
               src={this.props.info.image}
               alt={this.props.info.image}
             />
           </Col>
-          <Col className="name" lg={8}>
+          <Col className="name" xs={8} sm={8}>
             {this.props.info.name}
           </Col>
-          <Col className="point" lg={2}>
+          <Col className="point" xs={2} sm={2}>
             {this.props.info.point}
           </Col>
         </Row>

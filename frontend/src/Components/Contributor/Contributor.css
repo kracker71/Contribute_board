@@ -35,3 +35,90 @@
   text-align: right;
   padding-right: 20px;
 }
+
+@media only screen and (max-width: 1024px) {
+  .Contributor .row {
+    width: 700px;
+    height: 50px;
+    font-size: 16px;
+  }
+  .Contributor .profile {
+    height: 40px;
+  }
+}
+
+@media only screen and (max-width: 876px) {
+  .Contributor .row {
+    width: 600px;
+    height: 45px;
+    font-size: 14px;
+  }
+  .Contributor .profile {
+    height: 36px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .Contributor .row {
+    width: 500px;
+    height: 40px;
+    font-size: 12px;
+  }
+  .Contributor .profile {
+    height: 32px;
+    margin-left: -10px;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .Contributor .row {
+    width: 400px;
+  }
+  .Contributor .profile {
+    margin-left: -5px;
+  }
+  .Contributor .name {
+    margin-left: 5px;
+  }
+  .Contributor .point {
+    margin-left: -10px;
+  }
+}
+
+@media only screen and (max-width: 425px) {
+  .Contributor .row {
+    width: 350px;
+  }
+  .Contributor .rank {
+    margin-left: 3px;
+  }
+  .Contributor .profile {
+    margin-left: 5px;
+  }
+  .Contributor .name {
+    margin-left: 10px;
+  }
+  .Contributor .point {
+    margin-left: -18px;
+  }
+}
+
+@media only screen and (max-width: 375px) {
+  .Contributor .row {
+    width: 300px;
+  }
+}
+
+@media only screen and (max-width: 320px) {
+  .Contributor .row {
+    width: 250px;
+    height: 35px;
+    font-size: 10px;
+  }
+  .Contributor .profile {
+    height: 28px;
+  }
+  .Contributor .point {
+    margin-left: -22px;
+  }
+}
