@@ -1,7 +1,13 @@
-.navbar-brand {
-  font-size: 1.5rem;
+.NavigationBar {
+  background-color: transparent;
+  margin-bottom: 160px;
 }
 
 .navbar {
-  font-size: 1.25rem;
+  font-size: 20px;
+}
+
+.navbar-collapse a {
+  margin-left: 15px;
+  margin-right: 15px;
 }

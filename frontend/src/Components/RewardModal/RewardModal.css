@@ -1,12 +1,47 @@
-.RewardTitle {
-  font-size: 1.8rem;
+.btn-custom {
+  font-size: 20px;
+  border-radius: 50px;
+  background: linear-gradient(260.26deg, #fff400 9.39%, #fe9502 78.41%);
+  background-size: 200% auto;
+  background-position: center;
+  padding: 5px 30px;
+}
+
+.reward-modal .modal-content {
+  background-image: linear-gradient(180deg, #4c0c87 12.5%, #9e33a0 100%);
+}
+
+.modal {
+  padding: 0 0;
+  color: rgb(230, 230, 230);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: center;
+  border-bottom: 2px solid rgb(25, 25, 25);
+}
+
+.modal-footer {
+  border-top: 2px solid rgba(25, 25, 25, 0);
+}
+
+.modal-title {
+  font-size: 24px;
 }
 
 .RewardList {
   text-align: center;
-  margin-top: 20px;
+  padding: 20px 10px 0;
 }
 
-.modal-title {
-  height: 75px;
+.modal-footer .btn {
+  font-size: 16px;
+  padding: 5px 15px;
+  margin-top: -15px;
+  border-radius: 10px;
+}
+
+.modal-90w {
+  min-width: 45vw;
 }

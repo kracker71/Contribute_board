@@ -21,7 +21,7 @@ class Leaderboard extends Component {
   render() {
     return (
       <div>
-        {/* <TopContributorList contributor={topContributorList} /> */}
+        <TopContributorList contributor={topContributorList} />
         <ContributorList contributor={contributorList} />
       </div>
     );

@@ -10,9 +10,11 @@ class App extends Component {
       <div>
         <div className="background">
           <div className="background-filter">
-            {/* <NavigationBar /> */}
-            <LeaderboardTitle />
-            <Leaderboard />
+            <div className="stars">
+              <NavigationBar />
+              <LeaderboardTitle />
+              <Leaderboard />
+            </div>
           </div>
         </div>
       </div>
