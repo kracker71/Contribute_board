@@ -2,3 +2,21 @@
   display: flex;
   margin: 50px auto;
 }
+
+@media only screen and (max-width: 1280px) {
+  .ContributorList {
+    margin-top: 40px;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .ContributorList {
+    margin-top: 30px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .ContributorList {
+    margin-top: 20px;
+  }
+}

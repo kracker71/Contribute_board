@@ -36,21 +36,21 @@
 }
 
 .rank-1 .row {
-  /* display: none; */
+  display: none;
   color: black;
   background: linear-gradient(90deg, #fe9502 0%, #fff400 100%);
   box-shadow: 0px 0px 10px 2px rgba(255, 230, 0, 0.4);
 }
 
 .rank-2 .row {
-  /* display: none; */
+  display: none;
   color: black;
   background: linear-gradient(90deg, #244cdb 0%, #00e2ff 100%);
   box-shadow: 0px 0px 10px 2px rgba(96, 205, 255, 0.25);
 }
 
 .rank-3 .row {
-  /* display: none; */
+  display: none;
   color: black;
   background: linear-gradient(90deg, #7613d3 0%, #eb4dee 100%);
   box-shadow: 0px 0px 10px 2px rgba(255, 93, 247, 0.25);
@@ -87,6 +87,17 @@
   .Contributor .profile {
     height: 32px;
     margin-left: -10px;
+  }
+}
+
+@media only screen and (max-width: 650px) {
+  .rank-1 .row,
+  .rank-2 .row,
+  .rank-3 .row {
+    display: flex;
+  }
+  .Contributor .row {
+    margin: 5px auto;
   }
 }
 

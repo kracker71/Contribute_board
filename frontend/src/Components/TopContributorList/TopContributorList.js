@@ -5,7 +5,7 @@ import TopContributor from "../TopContributor/TopContributor";
 class TopContributorList extends Component {
   render() {
     return (
-      <div className="container">
+      <div className="TopContributorList container">
         <div className="row">
           <div className="col col-second">
             <TopContributor info={this.props.contributor[1]} place="second" />

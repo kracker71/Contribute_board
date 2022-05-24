@@ -1,25 +1,23 @@
 .TopContributor {
+  font-size: 20px;
   margin: 200px auto 0;
   text-align: center;
 }
 
 .TopContributor .rank {
   font-family: Kanit-SemiBold;
-  font-size: 20px;
   color: black;
   position: relative;
 }
 
 .TopContributor .name {
   font-family: Kanit-SemiBold;
-  font-size: 20px;
   color: white;
   margin-top: 10px;
 }
 
 .TopContributor .point {
   font-family: Kanit-SemiBold;
-  font-size: 20px;
   margin-top: -5px;
 }
 
@@ -194,4 +192,61 @@
 
 .third .tale {
   border-color: #ff9efa;
+}
+
+@media only screen and (max-width: 1280px) {
+  .TopContributor {
+    font-size: 18px;
+  }
+  .TopContributor .profile-group {
+    transform: scale(0.9);
+  }
+  .first {
+    margin-top: 130px;
+  }
+  .TopContributor .name {
+    margin-top: 5px;
+  }
+  .first .name {
+    margin-top: 0px;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .TopContributor {
+    font-size: 16px;
+  }
+  .TopContributor .profile-group {
+    transform: scale(0.8);
+  }
+  .TopContributor .rank {
+    margin-top: 5px;
+  }
+  .first {
+    margin-top: 132.5px;
+  }
+  .TopContributor .name {
+    margin-top: -5px;
+  }
+  .first .name {
+    margin-top: -13px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .TopContributor {
+    font-size: 14px;
+  }
+  .TopContributor .profile-group {
+    transform: scale(0.7);
+  }
+  .first {
+    margin-top: 135px;
+  }
+  .TopContributor .name {
+    margin-top: -12.5px;
+  }
+  .first .name {
+    margin-top: -22.5px;
+  }
 }

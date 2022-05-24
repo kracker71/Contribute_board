@@ -5,3 +5,54 @@
 .col-third {
   margin-right: 200px;
 }
+
+@media only screen and (max-width: 1440px) {
+  .col-second {
+    margin-left: 150px;
+  }
+  .col-third {
+    margin-right: 150px;
+  }
+}
+
+@media only screen and (max-width: 1280px) {
+  .col-second {
+    margin-left: 100px;
+  }
+  .col-third {
+    margin-right: 100px;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .col-second {
+    margin-left: 0;
+  }
+  .col-third {
+    margin-right: 0;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .col-second {
+    margin-left: 50px;
+  }
+  .col-third {
+    margin-right: 50px;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .col-second {
+    margin-left: -50px;
+  }
+  .col-third {
+    margin-right: -50px;
+  }
+}
+
+@media only screen and (max-width: 650px) {
+  .TopContributorList {
+    display: none;
+  }
+}
