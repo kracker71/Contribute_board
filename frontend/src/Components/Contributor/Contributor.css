@@ -4,6 +4,7 @@
   width: 760px;
   height: 55px;
   background: linear-gradient(90deg, #280040 0%, rgba(235, 77, 238, 0) 100%);
+  border: 1px solid #6a0085;
   border-radius: 50px;
   font-size: 18px;
   color: white;
