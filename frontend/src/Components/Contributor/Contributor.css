@@ -138,6 +138,9 @@
   .Contributor .row {
     width: 300px;
   }
+  .Contributor .point {
+    margin-left: -25px;
+  }
 }
 
 @media only screen and (max-width: 320px) {
