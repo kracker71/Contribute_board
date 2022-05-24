@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import "./TopContributorList.css";
 import TopContributor from "../TopContributor/TopContributor";
 
 class TopContributorList extends Component {
@@ -6,13 +7,13 @@ class TopContributorList extends Component {
     return (
       <div className="container">
         <div className="row">
-          <div className="col">
+          <div className="col col-second">
             <TopContributor info={this.props.contributor[1]} place="second" />
           </div>
-          <div className="col">
+          <div className="col col-first">
             <TopContributor info={this.props.contributor[0]} place="first" />
           </div>
-          <div className="col">
+          <div className="col col-third">
             <TopContributor info={this.props.contributor[2]} place="third" />
           </div>
         </div>
