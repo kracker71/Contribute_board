@@ -15,7 +15,7 @@ for (let i = 1; i <= 10; i++) {
 }
 
 const topContributorList = allContributorList.slice(0, 3);
-const contributorList = allContributorList.slice(3);
+const contributorList = allContributorList;
 
 class Leaderboard extends Component {
   render() {

@@ -36,6 +36,21 @@
   padding-right: 20px;
 }
 
+.rank-1 .row {
+  /* display: none; */
+  border-color: #fff400;
+}
+
+.rank-2 .row {
+  /* display: none; */
+  border-color: #53e7fa;
+}
+
+.rank-3 .row {
+  /* display: none; */
+  border-color: #ff9efa;
+}
+
 @media only screen and (max-width: 1024px) {
   .Contributor .row {
     width: 700px;

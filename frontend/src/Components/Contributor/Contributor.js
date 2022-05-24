@@ -5,7 +5,7 @@ import { Row, Col } from "react-bootstrap";
 class Contributor extends Component {
   render() {
     return (
-      <div className="Contributor">
+      <div className={"Contributor rank-" + this.props.info.rank}>
         <Row xs={4}>
           <Col className="rank" xs={1} sm={1}>
             {this.props.info.rank}
