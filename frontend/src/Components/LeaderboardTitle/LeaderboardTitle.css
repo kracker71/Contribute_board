@@ -100,4 +100,9 @@
   .LeaderboardTitle {
     margin-bottom: 60px;
   }
+  .facebook-group .logo {
+    width: 18px;
+    height: 18px;
+    margin-left: 5px;
+  }
 }
