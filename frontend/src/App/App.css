@@ -1,6 +1,6 @@
 .background {
   position: relative;
-  height: 825px;
+  height: 1000px;
   background-image: url("../../public/images/BG_PokerThailand.png");
   background-position: center;
   background-size: cover;
@@ -9,7 +9,7 @@
 
 .background-filter {
   position: relative;
-  height: 825px;
+  height: 1000px;
   background-color: rgba(17, 0, 31, 0.85);
   background-position: center;
   background-size: cover;
