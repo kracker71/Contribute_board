@@ -28,7 +28,7 @@
   }
 }
 
-@media only screen and (min-width: 576px) and (max-width: 768px) {
+@media only screen and (min-width: 576px) and (max-width: 767px) {
   .navbar .container {
     margin-right: 0;
   }
