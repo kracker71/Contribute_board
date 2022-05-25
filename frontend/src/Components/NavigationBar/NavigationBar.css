@@ -12,9 +12,20 @@
   margin-right: 15px;
 }
 
+.navbar-toggler {
+  margin-right: 0;
+  margin-left: auto;
+}
+
 @media only screen and (max-width: 768px) {
   .NavigationBar {
     margin-bottom: 120px;
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 768px) {
+  .navbar .container {
+    margin-right: 0;
   }
 }
 
