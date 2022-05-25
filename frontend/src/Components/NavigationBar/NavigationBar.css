@@ -42,8 +42,14 @@
 }
 
 @media only screen and (max-width: 425px) {
+  .navbar .container {
+    padding-right: 6px;
+  }
+}
+
+@media only screen and (max-width: 375px) {
   .navbar-toggler-icon {
-    height: 25px;
-    width: 25px;
+    height: 27.5px;
+    width: 27.5px;
   }
 }
