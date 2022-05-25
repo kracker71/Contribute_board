@@ -28,3 +28,76 @@
   margin-left: 10px;
   margin-bottom: 5px;
 }
+
+@media only screen and (max-width: 768px) {
+  .facebook-group {
+    font-size: 20px;
+  }
+  .title {
+    font-size: 42px;
+  }
+  .sub-title {
+    font-size: 20px;
+  }
+  .LeaderboardTitle {
+    margin-bottom: -80px;
+  }
+  .facebook-group .logo {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+@media only screen and (max-width: 650px) {
+  .facebook-group {
+    font-size: 18px;
+  }
+  .title {
+    font-size: 40px;
+  }
+  .sub-title {
+    font-size: 18px;
+  }
+  .LeaderboardTitle {
+    margin-bottom: 80px;
+  }
+  .facebook-group .logo {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+@media only screen and (max-width: 425px) {
+  .facebook-group {
+    font-size: 14px;
+  }
+  .title {
+    font-size: 30px;
+  }
+  .sub-title {
+    font-size: 14px;
+  }
+  .LeaderboardTitle {
+    margin-bottom: 60px;
+  }
+  .facebook-group .logo {
+    width: 22px;
+    height: 22px;
+    margin-left: 8px;
+  }
+}
+
+@media only screen and (max-width: 320px) {
+  .facebook-group {
+    font-size: 12px;
+  }
+  .title {
+    font-size: 26px;
+  }
+  .sub-title {
+    font-size: 12px;
+  }
+  .LeaderboardTitle {
+    margin-bottom: 60px;
+  }
+}
