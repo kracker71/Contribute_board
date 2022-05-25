@@ -23,3 +23,9 @@
   background-position: center;
   background-repeat: no-repeat;
 }
+
+@media only screen and (max-width: 768px) {
+  .stars {
+    background-image: none;
+  }
+}
