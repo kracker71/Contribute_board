@@ -146,17 +146,3 @@
     margin-left: -25px;
   }
 }
-
-@media only screen and (max-width: 320px) {
-  .Contributor .row {
-    width: 275px;
-    height: 35px;
-    font-size: 10px;
-  }
-  .Contributor .profile {
-    height: 28px;
-  }
-  .Contributor .point {
-    margin-left: -22px;
-  }
-}
