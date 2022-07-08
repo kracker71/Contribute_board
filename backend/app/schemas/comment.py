@@ -7,26 +7,26 @@ class CommentBase(BaseModel):
     comment_id:str
     
 class CommentCreate(CommentBase):
-    comment_data:str
-    date_comment:date
-    comment_like:Optional[int] = 0
+    comment_content:str
+    comment_date:date
+    comment_reaction_count:Optional[int] = 0
     comment_score:Optional[float] = 0.0
-    user_url:str
+    comment_profile_url:str
     post_url:str
     
 class CommentEdit(CommentBase):
-    comment_data:str
-    date_comment:date
-    comment_like:Optional[int] = 0
+    comment_content:str
+    comment_date:date
+    comment_reaction_count:Optional[int] = 0
     comment_score:float
     
 class ShowComment(BaseModel):
     user_id:UUID
     comment_id:str
     comment_score:float
-    date_comment:date
-    comment_like:Optional[int] = 0
-    comment_data:str
+    comment_date:date
+    comment_reaction_count:Optional[int] = 0
+    comment_content:str
     class Config:
         orm_mode=True
         

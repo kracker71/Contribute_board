@@ -5,15 +5,14 @@ from pydantic import BaseModel
 
 class PostBase(BaseModel):
     post_id: str
-    post_data: str
+    post_content: str
     post_url: str
-    date_scrape: Optional[date] = None
-    date_post: Optional[date] = None
+    post_scraped_date: Optional[date] = None
+    post_date: Optional[date] = None
     post_score:  Optional[float] = 0.0
-    post_likes: int
-    user_url:str
+    post_reaction_count: int
+    post_profile_url:str
 
-    
 class PostEdit(BaseModel):
     post_data: str
     date_scrape: date

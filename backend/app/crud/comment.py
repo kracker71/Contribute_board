@@ -15,8 +15,8 @@ def create_comment(request:CommentCreate,db:Session):
         raise HTTPException(status_code=status.HTTP_409_CONFLICT,detail="Already exists")
     
     db_comment = Comment(comment_id = request.comment_id,
-                         comment_data = request.comment_data,
-                         date_comment = request.date_comment,
+                         comment_data = request.comment_content,
+                         date_comment = request.comment_date,
                          comment_likes = request.comment_like,
                          comment_score = request.comment_score,
                          user_url = request.user_url,
