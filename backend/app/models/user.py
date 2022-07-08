@@ -9,12 +9,10 @@ class User(Base):
     __tablename__ = "user"
 
     user_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    name = Column(String(100))
+    user_name = Column(String(100))
     user_score = Column(Float)
-    update_score_date = Column(Date)
-    profile_picture_url = Column(String(2048))
-    profile_url = Column(String(2048))
-    
+    user_update_score_date = Column(Date)
+    user_profile_picture_url = Column(String(2048))
     
     user_contain_post = relationship("Post", back_populates="user_post_owner")
     user_contain_comment = relationship("Comment", back_populates='user_comment_owner')

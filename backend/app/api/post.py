@@ -11,9 +11,7 @@ router = APIRouter(
     responses={404: {"message": "Not found"}}
 )
 
-
 get_db = init_db.get_db
-
 
 @router.post('/add_post', status_code=status.HTTP_201_CREATED)
 async def add_post(request: PostBase, db: Session = Depends(get_db)):
