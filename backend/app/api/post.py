@@ -1,6 +1,14 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from typing import List
-from app.crud.post import create_post,get_post_by_id,update_post_by_id,del_post_by_id,get_all_post_url,get_post_url_by_id
+from app.crud.post import (
+    create_post, 
+    get_post_by_id, 
+    update_post_by_id, 
+    del_post_by_id, 
+    get_all_post_url, 
+    get_post_url_by_id,
+    get_post_score_by_id,
+)
 from app.database import init_db
 from sqlalchemy.orm import Session
 from app.schemas.post import PostBase, PostEdit, ShowPost
@@ -29,6 +37,9 @@ async def get_by_post_id(id,db:Session = Depends(get_db)):
 async def get_url_by_post_id(id,db:Session = Depends(get_db)):
     return get_post_url_by_id(id,db)
 
+@router.get('/{id}/score',response_model=float)
+async def get_score_by_id(id,db:Session = Depends(get_db)):
+    return get_post_score_by_id(id,db)
 
 @router.put('/update/{id}',status_code=status.HTTP_202_ACCEPTED)
 async def update_post_by_ID(id,request:PostEdit,db:Session = Depends(get_db)):
