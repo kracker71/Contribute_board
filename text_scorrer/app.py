@@ -11,14 +11,14 @@ print(__name__)
 scorrer = TextScorrer()
 
 # Get score and class of post
-@app.get("/score-and-class/{post_content}")
+@app.get("/score-and-class-for-post/{post_content}")
 def get_post_score_and_class(post_content: str):
-    return scorrer.get_score_and_class(post_content, is_comment=False)
+    return scorrer.get_score_and_class_for_post(post_content, is_comment=False)
 
 # Get score and class of comment
-@app.get("/score-and-class/{comment_content}")
+@app.get("/score-and-class-for-comment/{comment_content}")
 def get_comment_score_and_class(comment_content: str):
-    return scorrer.get_score_and_class(comment_content, is_comment=True)
+    return scorrer.get_score_for_comment(comment_content, is_comment=True)
 
 # Get sentence class
 @app.get("/class/{sentence}")

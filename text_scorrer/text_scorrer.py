@@ -21,7 +21,6 @@ class TextScorrer:
         cvec_path="models/cvec.pkl",
         ):           
         self.cvec = CustomUnpickler(open(cvec_path, 'rb')).load()
-        # self.cvec = pickle.load(open(cvec_path, "rb"))
         self.model = pickle.load(open(model_path, "rb"))
         self.thai_stopwords = list(thai_stopwords())
         self.classes = {
@@ -32,17 +31,19 @@ class TextScorrer:
             "4" : "share",
             "5" : "showoff",
         }    
-        self.classes_base_score = {
+        self.word_score = 1.0
+        self.comment_base_score = 0.0
+        self.post_classes_base_score = {
             "general" : 0.0,
-            "information" : 0.5,
-            "question" : 0.3,
-            "badbeat" : 0.0,
+            "information" : 5.0,
+            "question" : 3.0,
+            "badbeat" : 1.0,
             "share" : 0.0,
-            "showoff" : 0.3,
+            "showoff" : 3.0,
         }
         self.bonus_words_score = {
-            "gto" : 0.25,
-            "solver" : 0.25,
+            "gto" : 2.5,
+            "solver" : 2.5,
         }
     
     def preprocess_text(self, text):
@@ -51,17 +52,28 @@ class TextScorrer:
         final = " ".join(word for word in final if word.lower not in self.thai_stopwords)
         return final
     
-    def get_score_and_class(self, sentence, is_comment=False):
+    def get_score_and_class_for_post(self, sentence, is_comment=False):
         preprocessed_sentence = self.preprocess_text(sentence)
         num_word = self.get_num_word(preprocessed_sentence)
         class_word = self.get_class(preprocessed_sentence) if not is_comment else "general"
         bonus_word_score = self.get_bonus_word_score(preprocessed_sentence)
 
-        score = self.classes_base_score[class_word]
-        score += num_word * 0.1
+        score = self.post_classes_base_score[class_word]
+        score += num_word * self.word_score
         score += bonus_word_score
 
         return score, class_word
+    
+    def get_score_for_comment(self, comment):
+        preprocessed_comment = self.preprocess_text(comment)
+        num_word = self.get_num_word(preprocessed_comment)
+        bonus_word_score = self.get_bonus_word_score(preprocessed_comment)
+
+        score = self.comment_base_score
+        score += num_word * self.word_score
+        score += bonus_word_score
+
+        return score
 
     def get_bonus_word_score(self, preprocessed_sentence):
         bonus_word_score = 0.0
