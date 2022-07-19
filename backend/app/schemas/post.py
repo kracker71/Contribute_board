@@ -30,6 +30,12 @@ class PostEdit(PostBase):
     post_shared_count: Optional[int] = 0
     post_score: float
     post_scraped_date: date
+    
+class PostScoring(PostBase):
+    
+    post_score: float
+    post_scraped_date: date
+    post_class:Optional[int] = None
 
 class ShowPost(BaseModel):
 
@@ -44,6 +50,7 @@ class ShowPost(BaseModel):
     post_shared_count: Optional[int] = 0
     post_score:  Optional[float] = 0.0
     post_scraped_date: Optional[date] = None
+    post_class:Optional[int] = None
 
     class Config:
         orm_mode=True
