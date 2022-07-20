@@ -1,7 +1,7 @@
 from uuid import uuid4
 from xmlrpc.client import Boolean
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import  Column, ForeignKey, String, Date, Float, Integer, Text
+from sqlalchemy import  Column, ForeignKey, String, DateTime, Float, Integer, Text
 from sqlalchemy.orm import relationship
 from ..database.init_db import Base
 
@@ -11,7 +11,7 @@ class Post(Base):
 
     post_id = Column(String(100), primary_key=True)
     post_url = Column(String(2048))
-    post_date = Column(Date)
+    post_date = Column(DateTime)
     post_username = Column(String(100))
     post_profile_url = Column(String(2048))
     post_content = Column(Text)
@@ -20,7 +20,7 @@ class Post(Base):
     post_comment_count = Column(Integer)
     post_shared_count = Column(Integer)
     post_score = Column(Float)
-    post_scraped_date = Column(Date)
+    post_scraped_date = Column(DateTime)
     post_class = Column(Integer)
     
     user_id = Column(String(100), ForeignKey("user.user_id"))

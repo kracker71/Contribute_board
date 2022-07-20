@@ -1,5 +1,5 @@
 from typing import List, Optional
-from datetime import date
+from datetime import datetime
 from pydantic import BaseModel
 
 class PostBase(BaseModel):
@@ -9,7 +9,7 @@ class PostBase(BaseModel):
     
 class PostCreate(PostBase):
     
-    post_date: date
+    post_date: datetime
     post_username:str
     post_profile_url:str
     post_content: Optional[str] = None
@@ -18,7 +18,7 @@ class PostCreate(PostBase):
     post_comment_count: Optional[int] = 0
     post_shared_count: Optional[int] = 0
     post_score:  Optional[float] = 0.0
-    post_scraped_date: Optional[date] = None
+    post_scraped_date: Optional[datetime] = None
     
     user_id:str
 
@@ -29,18 +29,18 @@ class PostEdit(PostBase):
     post_comment_count: Optional[int] = 0
     post_shared_count: Optional[int] = 0
     post_score: float
-    post_scraped_date: date
+    post_scraped_date: datetime
     
 class PostScoring(PostBase):
     
     post_score: float
-    post_scraped_date: date
+    post_scraped_date: datetime
     post_class:Optional[int] = None
 
 class ShowPost(BaseModel):
 
     post_url: str
-    post_date: date
+    post_date: datetime
     post_username:str
     post_profile_url:str
     post_content: Optional[str] = None
@@ -49,7 +49,7 @@ class ShowPost(BaseModel):
     post_comment_count: Optional[int] = 0
     post_shared_count: Optional[int] = 0
     post_score:  Optional[float] = 0.0
-    post_scraped_date: Optional[date] = None
+    post_scraped_date: Optional[datetime] = None
     post_class:Optional[int] = None
 
     class Config:
