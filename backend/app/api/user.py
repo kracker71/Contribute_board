@@ -8,8 +8,8 @@ from app.schemas.comment import ShowComment
 from app.crud.user import (
     create_user, 
     get_user_by_id, 
-    get_score_by_name, 
-    get_score_by_ranking,
+    get_score_order_by_name, 
+    get_score_order_by_ranking,
     update_user_profile_by_id, 
     update_user_score_by_id, 
     del_user_by_id, 
@@ -40,12 +40,12 @@ async def get_user_by_ID(id,db:Session = Depends(get_db)):
     return get_user_by_id(id,db)
 
 @router.get("/score/name",response_model=List[ShowUser])
-async def get_score_by_Name(db:Session = Depends(get_db)):
-    return get_score_by_name(db)
+async def get_score_order_by_Name(db:Session = Depends(get_db)):
+    return get_score_order_by_name(db)
 
 @router.get("/score/ranking",response_model=List[ShowUser])
-async def get_score_by_Rank(db:Session = Depends(get_db)):
-    return get_score_by_ranking(db)
+async def get_score_order_by_Rank(db:Session = Depends(get_db)):
+    return get_score_order_by_ranking(db)
 
 @router.put("/update/score/all",status_code=status.HTTP_202_ACCEPTED)
 async def update_all_user_Score(request:UserEditScore,db :Session = Depends(get_db)):

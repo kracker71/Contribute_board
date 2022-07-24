@@ -29,10 +29,10 @@ def get_user_by_id(id:str,db:Session):
                             detail=f"not found a user with an {id}")
     return user
 
-def get_score_by_ranking(db:Session):
+def get_score_order_by_ranking(db:Session):
     return db.query(User).order_by(User.user_score.desc()).all()
 
-def get_score_by_name(db:Session):
+def get_score_order_by_name(db:Session):
     return db.query(User).order_by(User.user_name).all()
 
 #####post section######
