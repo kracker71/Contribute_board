@@ -22,6 +22,9 @@ def create_post(request:PostBase, db:Session):
     db.refresh(post)
     return {'created'}
 
+def get_post(db:Session,limit,offset=0):
+    return db.query(Post).offset(offset).limit(limit).all()
+
 def get_all_post_id(db:Session):
     return db.query(Post).options(load_only("post_id")).all()
 
