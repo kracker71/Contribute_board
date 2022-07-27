@@ -5,6 +5,7 @@ from app.models.user import User
 from app.crud.user import get_user_by_id
 from app.schemas.post import PostBase, PostEdit
 from app.database import init_db
+from backend.app.schemas.post import PostCreate
 
 def create_post(request:PostBase, db:Session):
     # Check if post already exist
@@ -22,7 +23,7 @@ def create_post(request:PostBase, db:Session):
     db.refresh(post)
     return {'created'}
 
-def get_post(db:Session,limit,offset=0):
+def get_post(db:Session,limit = None,offset=0):
     return db.query(Post).offset(offset).limit(limit).all()
 
 def get_all_post_id(db:Session):
@@ -65,6 +66,15 @@ def update_post_by_id(id, request:PostEdit, db:Session):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"not found a post with an id {id}")
     post.update(request.__dict__,synchronize_session="fetch")
+    db.commit()
+    return {'updated'}
+
+def init_post_data_by_id(id:str, request:PostCreate, db:Session):
+    post = db.query(Post).filter(Post.post_id == id)
+    if not post.first():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"not found a post with an id {id}")
+    post.update(request,synchronize_session="fetch")
     db.commit()
     return {'updated'}
 
