@@ -19,8 +19,7 @@ class PostCreate(PostBase):
     post_shared_count: Optional[int] = 0
     post_score:  Optional[float] = 0.0
     post_scraped_date: Optional[datetime] = None
-    
-    user_id:str
+    post_is_update:Optional[bool] = False
 
 class PostEdit(PostBase):
     post_content: Optional[str] = None
@@ -30,6 +29,7 @@ class PostEdit(PostBase):
     post_shared_count: Optional[int] = 0
     post_score: float
     post_scraped_date: datetime
+    post_is_update:Optional[bool] = False
     
 class PostScoring(PostBase):
     
