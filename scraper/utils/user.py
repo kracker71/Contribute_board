@@ -169,6 +169,87 @@ def init_user_collecting(driver,db_conn,db:Session,domain,group_url,savecsv,save
     # First block is a group user that already collect above
     # tag_name = info_blocks.find_element() 
     
+def scrape_user_data_by_id(driver,db_conn,db:Session,domain,group_url,user_id,savedb):
+    
+    seed_url = domain+'/'+user_id
+        
+    driver.get(seed_url)
+    time.sleep(4)
+    
+    ##################################### Collecting Data #####################################
+    
+    # Initialize time
+    now = time.localtime(time.time())
+    datetime = time.strftime("%m/%d/%Y, %H:%M:%S", now)
+    
+    print("Collecting Data")
+    user_data = []
+    pos = 0
+        
+    data = []
+    
+    #Member is a user    
+    try:
+        user_block = driver.find_element(By.XPATH,"//div[@class = 'bp9cbjyn j83agx80 psu0lv52 di70i8f1 s4qno8f7 py2vq5j3 owhy4gn4']")
+    
+    #Member is a Page_admin
+    except:
+        user_block = driver.find_element(By.XPATH,"//div[@class = 'rq0escxv l9j0dhe7 du4w35lb j83agx80 pfnyh3mw i1fnvgqd aovydwv3 lhclo0ds btwxx1t3 discj3wi dlv3wnog rl04r1d5 enqfppq2 muag1w35']")
+        
+    profile_pic = user_block.find_element(By.XPATH,".//div[@class = 'q9uorilb l9j0dhe7 pzggbiyp du4w35lb']//*[name()='svg']/*[name() = 'g']/*[name() = 'image']")
+    # print(profile_pic)
+    if profile_pic:
+        profile_pic = profile_pic.get_attribute('xlink:href')
+        
+        # Download Picture
+        
+        # Encode Picture
+        
+    else : profile_pic = None
+    try:
+        user_info = user_block.find_element(By.XPATH,".//div[@class = 'j83agx80 mpmpiqla ahl66waf tmq14sqq rux31ns4 sjcfkmk3 dti9y0u4 nyziof1z']//div[@class = 'bi6gxh9e aov4n071']")
+    except:
+        user_info = user_block.find_element(By.XPATH,".//div[@class = 'rq0escxv l9j0dhe7 du4w35lb j83agx80 cbu4d94t d2edcug0 hpfvmrgz buofh1pr g5gj957u o8rfisnq ph5uu5jm b3onmgus ecm0bbzt on77hlbc ihqw7lf3']//div[@class = 'bi6gxh9e aov4n071']")
+    
+    if user_info:
+        name = user_info.text.split('(')[0]
+        profile_link = group_url + '/user/' + user_id
+    else:
+        name = None
+        user_id = None
+        profile_link = None
+        
+    data.append(user_id)
+    data.append(name)
+    data.append(profile_link)
+    data.append(profile_pic)
+    data.append(0)
+    data.append(datetime)
+    
+    user_data.append(data)
+        
+    ###########################################################################################
+    
+    df = pd.DataFrame(user_data,columns=["user_id","user_name","user_profile_url","user_profile_picture_url","user_score","user_update_score_date"])
+    
+    # print(df.to_string)
+    
+    ###### Post data to DB#########
+    if savedb:
+        try:
+            r = df.to_sql('user',con = db_conn,if_exists='append', index=False)
+            # print('New Rows append =',r)
+            print("POST SUCCESS")
+            # db.commit()
+        except :
+            print("UNABLE TO POST TO DB")
+    ###############################
+    
+    # print("Task Done")s
+    return df
+    # First block is a group user that already collect above
+    # tag_name = info_blocks.find_element()
+        
 def update_user(driver,domain,group_url,savecsv,limit_row,it_now,it_end):
     
     seed_url += PAGE
