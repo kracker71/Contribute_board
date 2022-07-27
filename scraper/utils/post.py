@@ -10,11 +10,24 @@ from bs4 import BeautifulSoup
 
 import os
 from pathlib import Path
+import sys
 
 from .comment import comment_collecting
 
 FILE = Path(__file__).resolve()
 ROOT_FILE = FILE.parents[0].parents[0]
+ROOT = FILE.parents[0].parents[0].parents[0]  # backend root directory
+# print(FILE)
+# print(ROOT)
+
+if str(ROOT) not in sys.path:
+    sys.path.append(str(ROOT))  # add ROOT to PATH
+if str(ROOT / 'backend') not in sys.path:
+    sys.path.append(str(ROOT / 'backend'))  # add backend ROOT to PATH
+
+ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
+
+from backend.app.crud.post import init_post_data_by_id
 
 NPOST_FEED = '?sorting_setting=CHRONOLOGICAL'
 RECENT_FEED = '?sorting_setting=RECENT_ACTIVITY'
@@ -40,26 +53,26 @@ def get_post_link(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limi
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")  
         time.sleep(scroll_pause_time)
         
-        links = driver.find_elements(By.XPATH,"//div[@class='ll8tlv6m j83agx80 btwxx1t3 n851cfcs hv4rvrfc dati1w0a pybr56ya']")
+        user_blocks = driver.find_elements(By.XPATH,"//div[@class='ll8tlv6m j83agx80 btwxx1t3 n851cfcs hv4rvrfc dati1w0a pybr56ya']")
         
-        if not links:
+        if not user_blocks:
             break
         
         #for dev
-        if len(links) > 5:
+        if len(user_blocks) > 5:
             break
         
         # Break the loop when no more new post
-        if  len(links) == count:
+        if  len(user_blocks) == count:
             cond+=1
             if cond == 5:
                 break
         else: cond = 0
-        count = len(links)
+        count = len(user_blocks)
     ###########################################################################################
     print('\n',"Done Scrolling")
 
-    print('\n',"This Group has",len(links),"posts",'\n')
+    print('\n',"This Group has",len(user_blocks),"posts",'\n')
         
 
     ##################################### Collecting Data #####################################
@@ -68,9 +81,22 @@ def get_post_link(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limi
     pos = 0
     post_links = []
     
-    for link in links:
+    for link in user_blocks:
         
         data = []
+        
+        user = link.find_element(By.XPATH,".//a[@class = 'oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz rq0escxv nhd2j8a9 nc684nl6 p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso i1ao9s8h esuyzwwr f1sip0of lzcic4wl gpro0wi8 oo9gr5id lrazzd5p']")
+        
+        if user:
+            user_name = user.text
+            user_href = user.get_attribute('href')
+            if "user/" not in user_href:
+                user_id = user_href[25:].split("/")[0].split("?")[0]
+            else:
+                user_id = user_href.split("user/")[1].split("/")[0]
+        else:
+            user_name = None
+            user_id = None
         
         link = link.find_element(By.XPATH,".//a[@class = 'oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz rq0escxv nhd2j8a9 nc684nl6 p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso i1ao9s8h esuyzwwr f1sip0of lzcic4wl gpro0wi8 m9osqain']")
         
@@ -86,6 +112,7 @@ def get_post_link(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limi
                 id = url.split("posts/")[1].split("/")[0]
                 data.append(id)
                 data.append(url)
+                data.append(user_id)
                 
                 post_links.append(data)
 
@@ -94,7 +121,7 @@ def get_post_link(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limi
         
         # Collecting data every 100 row
         if len(post_links) >= limit_row:
-            df = pd.DataFrame(post_links,columns=["post_id","post_url"])
+            df = pd.DataFrame(post_links,columns=["post_id","post_url","user_id"])
             print("exceed {} Rows... Saving to csv".format(limit_row))
             
             # Save To .csv
@@ -124,7 +151,7 @@ def get_post_link(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limi
         pos +=1
     ###########################################################################################
     
-    df = pd.DataFrame(post_links,columns=["post_id","post_url"])
+    df = pd.DataFrame(post_links,columns=["post_id","post_url","user_id"])
     
     # Save To .csv
     if savecsv:
@@ -152,7 +179,7 @@ def get_post_link(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limi
     
     print(df)
     
-    return df,len(links)
+    return df,len(user_blocks)
 
 def get_post_info(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limit_row,post_info):
     
@@ -162,11 +189,11 @@ def get_post_info(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limi
     pos = 0
     
     for pid,link in post_info:
-        
+        # print(pid,link)
         post = []
         driver.get(link)
         post.append(pid)
-        post.append(link)
+        # post.append(link)
         time.sleep(1)
         data_soup = BeautifulSoup(driver.page_source, "html.parser")
         
@@ -186,7 +213,6 @@ def get_post_info(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limi
         else:
             user_id = user['href'].split("user/")[1].split("/")[0]
         profile_link = urljoin(domain,user_id)
-        post.append(user_id)
         post.append(user_name)
         post.append(profile_link)
         
@@ -231,12 +257,15 @@ def get_post_info(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limi
         
         post.append(0)
         post.append(datetime)
+        post.append(True)
+        # post.append(user_id)
+        
         
         all_post_data.append(post)
         
         # Collecting data every 100 row
         if len(all_post_data) >= limit_row:
-            df = pd.DataFrame(all_post_data,columns=["post_id","post_url"])
+            df = pd.DataFrame(all_post_data,columns=["post_id","post_date","post_username","post_profile_url","post_content","post_shared_content","post_reaction_count","post_comment_count","post_shared_count","post_score","post_scraped_date","post_is_update"])
             print("exceed {} Rows... Saving to csv".format(limit_row))
             
             # Save To .csv
@@ -253,8 +282,12 @@ def get_post_info(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limi
             ###### Post data to DB#########
             if savedb:
                 try:
-                    r = df.to_sql('post',con = db_conn,if_exists='append', index=False)
-                    print('New Rows append =',r)
+                    for post_data in df:
+                        try:
+                            init_post_data_by_id(post_data['post_id'],post_data.drop(['post_id'],axis = 1),db)
+                        except:
+                            print("UNABLE TO POST {} TO DB".format(post_data['post_id']))
+                            
                     print("POST SUCCESS")
                     # db.commit()
                 except :
@@ -265,7 +298,7 @@ def get_post_info(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limi
         
         pos +=1
         
-    df = pd.DataFrame(all_post_data,columns=["PID","Post_link","Post_Date","UID","Username","Profile_link","Post_content","Shared_content","Reaction","Comment_count","Shares_count","Score","ScrapeDate"])
+    df = pd.DataFrame(all_post_data,columns=["post_id","post_date","post_username","post_profile_url","post_content","post_shared_content","post_reaction_count","post_comment_count","post_shared_count","post_score","post_scraped_date","post_is_update"])
     
     # Save To .csv
     if savecsv:
