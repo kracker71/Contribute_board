@@ -25,6 +25,7 @@ if str(ROOT / 'backend') not in sys.path:
 
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
+from scraper.utils.user import scrape_user_data_by_id
 # from backend.app.models
 
 def init_user_data(db_conn,db:Session):
@@ -55,3 +56,7 @@ def init_user_data(db_conn,db:Session):
     return df
     # First block is a group user that already collect above
     # tag_name = info_blocks.find_element() 
+    
+def test_scrape_user_by_id(driver,db_conn,db:Session,domain,group_url,user_id,savedb):
+    
+    scrape_user_data_by_id(driver,db_conn,db,domain,group_url,user_id,savedb)
