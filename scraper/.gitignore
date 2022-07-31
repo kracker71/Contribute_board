@@ -122,3 +122,6 @@ result/*
 
 # facebook_cookies
 cookies.pkl
+
+# key
+GCP_KEY.json
