@@ -6,14 +6,30 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+
+from sqlalchemy.orm import Session
+
 import pandas as pd
 import os
+import sys
+from pathlib import Path
 
-def comment_collecting(driver,domain,savecsv,limit_row,post_info,comment_number):
+FILE = Path(__file__).resolve()
+ROOT_FILE = FILE.parents[0].parents[0]
+ROOT = FILE.parents[0].parents[0].parents[0]
+
+if str(ROOT) not in sys.path:
+    sys.path.append(str(ROOT))  # add ROOT to PATH
+if str(ROOT / 'backend') not in sys.path:
+    sys.path.append(str(ROOT / 'backend'))  # add backend ROOT to PATH
+
+ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
+
+def comment_collecting(driver,db_conn,db:Session,domain,savecsv,savedb,limit_row,post_info,comment_number):
     
-    now = time.gmtime(time.time())
+    now = time.localtime(time.time())
     datetime = time.strftime("%m/%d/%Y, %H:%M:%S", now)
-    
+    # print(post_info)
     for link,pid in post_info:
         driver.get(link)
         time.sleep(1)
@@ -82,14 +98,20 @@ def comment_collecting(driver,domain,savecsv,limit_row,post_info,comment_number)
                     user_id = user_comment.a['href'].split("user/")[1].split("/")[0]
                 profile_link = urljoin(domain,user_id)
                 
-                comment_id = user_comment.a['href'].split("comment_id=")[1].split("&__")[0]
-
+                
+                # ===============UPDATE 3/8/2022===============
+                comment_id = block.find("ul",{"class":"o22cckgh q9uorilb bo9p93cb oygrvhab kkf49tns l66bhrea linoseic"}).a['href']
+                
+                if 'reply_comment_id' in comment_id:
+                    comment_id = comment_id.split("reply_comment_id=")[1].split("&__")[0]
+                else:
+                    comment_id = comment_id.split("comment_id=")[1].split("&__")[0]
+                # =============================================
+                
                 data.append(comment_id)
                 data.append(content)
-                data.append(user_id)
                 data.append(user_name)
                 data.append(profile_link)
-                data.append(pid)
                 
                 # Comment date
                 comment_date = block.findChildren("a",{"class":"oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz rq0escxv nhd2j8a9 nc684nl6 p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso i1ao9s8h esuyzwwr f1sip0of lzcic4wl gpro0wi8 m9osqain knj5qynh"})
@@ -110,34 +132,66 @@ def comment_collecting(driver,domain,savecsv,limit_row,post_info,comment_number)
                     data.append(0)
                 data.append(0)
                 data.append(datetime)
+                data.append(user_id)
+                data.append(pid)
+
                 
                 all_comment_data.append(data)
                 
                 # Collecting data every 100 row
                 if len(all_comment_data) >= limit_row:
-                    df = pd.DataFrame(all_comment_data,columns=["CID","Content","UID","Name","Profile_Link","PID","Comment_Date","Reaction","Score","ScrapeDate"])
+                    df = pd.DataFrame(all_comment_data,columns=["comment_id","comment_content","comment_username","comment_profile_url","comment_date","comment_reaction_count","comment_score","comment_date_scraped","user_id","post_id"])
                     print("exceed {} Rows... Saving to csv".format(limit_row))
                     
                     # Save To .csv
                     if savecsv:
-                        path = os.getcwd()
-                        name = "all_comment_data{}.csv".format(pos+1)
+                        path = ROOT_FILE
+                        name = "comment{}.csv".format(pos+1)
                         try:
-                            df.to_csv(os.path.join(path,'result','comment',name),encoding='utf-8-sig') 
+                            df.to_csv(os.path.join(path,'result','comment',name),encoding='utf-8-sig',index=False) 
                         except:
-                            os.mkdirs(os.path.join(path,'result','comment'))
-                            df.to_csv(os.path.join(path,'result','comment',name),encoding='utf-8-sig')
+                            os.makedirs(os.path.join(path,'result','comment'))
+                            df.to_csv(os.path.join(path,'result','comment',name),encoding='utf-8-sig',index=False) 
                     
                     
-                    #POST TO DB
+                    ###### Post data to DB#########
+                    if savedb:
+                        try:
+                            r = df.to_sql('comment',con = db_conn,if_exists='append', index=False)
+                            print('New Rows append =',r)
+                            print("POST SUCCESS")
+                            # db.commit()
+                        except :
+                            print("UNABLE TO POST TO DB")
+                    ###############################
 
                     all_comment_data = []
                     
                 pos +=1
     ###########################################################################################
 
-    df = pd.DataFrame(all_comment_data,columns=["CID","Content","UID","Name","Profile_Link","PID","Comment_Date","Reaction","Score","ScrapeDate"])
+    df = pd.DataFrame(all_comment_data,columns=["comment_id","comment_content","comment_username","comment_profile_url","comment_date","comment_reaction_count","comment_score","comment_date_scraped","user_id","post_id"])
     # df.to_csv("comment.csv",encoding='utf-8-sig')
+    
+    if savecsv:
+        path = ROOT_FILE
+        name = "comment{}.csv".format(pos+1)
+        try:
+            df.to_csv(os.path.join(path,'result','comment',name),encoding='utf-8-sig',index=False) 
+        except:
+            os.makedirs(os.path.join(path,'result','comment'))
+            df.to_csv(os.path.join(path,'result','comment',name),encoding='utf-8-sig',index=False) 
+    
+    
+    ###### Post data to DB#########
+    if savedb:
+        try:
+            r = df.to_sql('comment',con = db_conn,if_exists='append', index=False)
+            print('New Rows append =',r)
+            print("POST SUCCESS")
+            # db.commit()
+        except :
+            print("UNABLE TO POST TO DB")
 
     print("Task Done")
     
