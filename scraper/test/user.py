@@ -57,6 +57,6 @@ def init_user_data(db_conn,db:Session):
     # First block is a group user that already collect above
     # tag_name = info_blocks.find_element() 
     
-def test_scrape_user_by_id(driver,db_conn,db:Session,domain,group_url,user_id,savedb):
+def test_scrape_user_by_id(driver,db_conn,db:Session,domain,group_url,user_id,savedb,gcp_bucket_name):
     
-    scrape_user_data_by_id(driver,db_conn,db,domain,group_url,user_id,savedb)
+    scrape_user_data_by_id(driver,db_conn,db,domain,group_url,user_id,savedb,gcp_bucket_name)

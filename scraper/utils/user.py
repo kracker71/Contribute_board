@@ -8,13 +8,39 @@ from sqlalchemy.orm import Session
 from selenium.webdriver.common.by import By
 
 import os
+import sys
 from pathlib import Path
 
 FILE = Path(__file__).resolve()
 ROOT_FILE = FILE.parents[0].parents[0]
+ROOT = FILE.parents[0].parents[0].parents[0]
 PAGE = '/members'
+
+if str(ROOT) not in sys.path:
+    sys.path.append(str(ROOT))  # add ROOT to PATH
     
-def init_user_collecting(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limit_row):
+ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
+    
+from scraper.utils.image import download_image
+from scraper.utils.gcp import upload_blob_from_memory,upload_blob
+
+def image_upload(out_dir,img_url,file_name,local_save,
+                 bucket_name,source_contents,destination_blob_name):
+    
+    image_content = download_image(file_name=file_name,
+                       img_url=img_url,
+                       out_dir=out_dir,
+                       local_save=local_save)
+    if local_save:
+        upload_blob(bucket_name=bucket_name,
+                    source_file_name=source_contents,
+                    destination_blob_name=destination_blob_name)
+    else :
+        upload_blob_from_memory(bucket_name=bucket_name,
+                                contents=image_content,
+                                destination_blob_name=destination_blob_name)
+    
+def init_user_collecting(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limit_row,gcp_bucket_name):
     
     seed_url = group_url + PAGE
         
@@ -41,7 +67,7 @@ def init_user_collecting(driver,db_conn,db:Session,domain,group_url,savecsv,save
         users = info_block.find_elements(By.XPATH,"div")
         
         #for dev
-        if len(users) > 200:
+        if len(users) > 10:
             break
         
         # Break the loop when no more new post
@@ -73,18 +99,6 @@ def init_user_collecting(driver,db_conn,db:Session,domain,group_url,savecsv,save
         
         data = []
         
-        profile_pic = user.find_element(By.XPATH,".//div[@class = 'j83agx80 cbu4d94t tvfksri0 aov4n071 bi6gxh9e l9j0dhe7 nqmvxvec']//*[name()='svg']/*[name() = 'g']/*[name() = 'image']")
-        # print(profile_pic)
-        if profile_pic:
-            profile_pic = profile_pic.get_attribute('xlink:href')
-            
-            # Download Picture
-            
-            # Encode Picture
-            
-        else : profile_pic = None
-        
-        
         user_info = user.find_element(By.XPATH,".//div[@class = 'ow4ym5g4 auili1gw rq0escxv j83agx80 buofh1pr g5gj957u i1fnvgqd oygrvhab cxmmr5t8 hcukyx3x kvgmc6g5 hpfvmrgz qt6c0cv9 jb3vyjys l9j0dhe7 du4w35lb bp9cbjyn btwxx1t3 dflh9lhu scb9dxdr nnctdnn4']//a[@class = 'oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz rq0escxv nhd2j8a9 nc684nl6 p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso i1ao9s8h esuyzwwr f1sip0of lzcic4wl gpro0wi8 oo9gr5id lrazzd5p']")
         if user_info:
             name = user_info.text
@@ -98,6 +112,21 @@ def init_user_collecting(driver,db_conn,db:Session,domain,group_url,savecsv,save
             name = None
             user_id = None
             profile_link = None
+            
+        profile_pic = user.find_element(By.XPATH,".//div[@class = 'j83agx80 cbu4d94t tvfksri0 aov4n071 bi6gxh9e l9j0dhe7 nqmvxvec']//*[name()='svg']/*[name() = 'g']/*[name() = 'image']")
+        # print(profile_pic)
+        if profile_pic:
+            profile_pic = profile_pic.get_attribute('xlink:href')
+            
+            # Download & Upload Picture to GCP
+            image_dir = os.path.join(ROOT_FILE,'result','image')
+            
+            image_upload(image_dir,profile_pic,user_id,local_save=False,
+                         bucket_name=gcp_bucket_name,
+                         source_contents=os.path.join(image_dir,user_id+'.jpg'),
+                         destination_blob_name=user_id)
+            
+        else : profile_pic = None
             
         data.append(user_id)
         data.append(name)
@@ -169,7 +198,9 @@ def init_user_collecting(driver,db_conn,db:Session,domain,group_url,savecsv,save
     # First block is a group user that already collect above
     # tag_name = info_blocks.find_element() 
     
-def scrape_user_data_by_id(driver,db_conn,db:Session,domain,group_url,user_id,savedb):
+def scrape_user_data_by_id(driver,db_conn,db:Session,domain,group_url,user_id:str,savedb,gcp_bucket_name):
+    
+    user_id = str(user_id)
     
     seed_url = domain+'/'+user_id
         
@@ -196,16 +227,7 @@ def scrape_user_data_by_id(driver,db_conn,db:Session,domain,group_url,user_id,sa
     except:
         user_block = driver.find_element(By.XPATH,"//div[@class = 'rq0escxv l9j0dhe7 du4w35lb j83agx80 pfnyh3mw i1fnvgqd aovydwv3 lhclo0ds btwxx1t3 discj3wi dlv3wnog rl04r1d5 enqfppq2 muag1w35']")
         
-    profile_pic = user_block.find_element(By.XPATH,".//div[@class = 'q9uorilb l9j0dhe7 pzggbiyp du4w35lb']//*[name()='svg']/*[name() = 'g']/*[name() = 'image']")
-    # print(profile_pic)
-    if profile_pic:
-        profile_pic = profile_pic.get_attribute('xlink:href')
-        
-        # Download Picture
-        
-        # Encode Picture
-        
-    else : profile_pic = None
+    
     try:
         user_info = user_block.find_element(By.XPATH,".//div[@class = 'j83agx80 mpmpiqla ahl66waf tmq14sqq rux31ns4 sjcfkmk3 dti9y0u4 nyziof1z']//div[@class = 'bi6gxh9e aov4n071']")
     except:
@@ -218,6 +240,21 @@ def scrape_user_data_by_id(driver,db_conn,db:Session,domain,group_url,user_id,sa
         name = None
         user_id = None
         profile_link = None
+        
+    profile_pic = user_block.find_element(By.XPATH,".//div[@class = 'q9uorilb l9j0dhe7 pzggbiyp du4w35lb']//*[name()='svg']/*[name() = 'g']/*[name() = 'image']")
+    # print(profile_pic)
+    if profile_pic:
+        profile_pic = profile_pic.get_attribute('xlink:href')
+        
+        # Download & Upload Picture to GCP
+        image_dir = os.path.join(ROOT_FILE,'result','image')
+        
+        image_upload(image_dir,profile_pic,user_id,local_save=False,
+                        bucket_name=gcp_bucket_name,
+                        source_contents=os.path.join(image_dir,user_id+'.jpg'),
+                        destination_blob_name=user_id)
+        
+    else : profile_pic = None
         
     data.append(user_id)
     data.append(name)
@@ -348,7 +385,7 @@ def update_user(driver,domain,group_url,savecsv,limit_row,it_now,it_end):
                     try:
                         df.to_csv(os.path.join(path,'result','user',name),encoding='utf-8-sig',index=False) 
                     except:
-                        os.mkdirs(os.path.join(path,'result','user'))
+                        os.makedirs(os.path.join(path,'result','user'))
                         df.to_csv(os.path.join(path,'result','user',name),encoding='utf-8-sig',index=False) 
     
                     

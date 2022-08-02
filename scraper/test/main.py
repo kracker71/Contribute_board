@@ -1,8 +1,10 @@
+from mimetypes import init
 import time
 from selenium import webdriver
 from dotenv import dotenv_values
 from user import init_user_data,test_scrape_user_by_id
 from post import init_post_links,init_post_data,test_post_data,test_post_link
+from comment import test_comment,init_comment
 
 from fastapi import Depends
 from sqlalchemy.orm import Session
@@ -35,26 +37,30 @@ GROUP_URL = DOMAIN + '/groups/' + GROUP_ID
 SAVECSV = True
 SAVEDB = False
 LIMIT_ROW = 100
+GCP_BUCKET = 'test-image-example-1'
 
 
 def test():
     
     get_db = init_db.get_session()
     # print("db =",get_db())
-    # driver = strat_driver()
+    driver = strat_driver()
     
     # init_user_data(init_db.con,Depends(get_db))
     
-    # test_scrape_user_by_id(driver,init_db.con,Depends(get_db),DOMAIN,GROUP_URL,'100012595639507',SAVEDB)
+    # test_scrape_user_by_id(driver,init_db.con,Depends(get_db),DOMAIN,GROUP_URL,'100012595639507',SAVEDB,GCP_BUCKET)
     
     # init_post_links(init_db.con,Depends(get_db))
     
     # test_post_link(driver,init_db.con,Depends(get_db),DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW)
     
-    driver = 0
-    init_post_data(driver,init_db.con,get_db,DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW)
+    # driver = 0
+    # init_post_data(driver,init_db.con,get_db,DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW)
     
     # test_post_data(driver,init_db.con,get_db,DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW)
+    
+    # test_comment(driver,init_db.con,get_db,DOMAIN,SAVECSV,SAVEDB,LIMIT_ROW)
+    init_comment(driver,init_db.con,get_db,DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW,GCP_BUCKET)
     
 def strat_driver():
     #PATH to webdriver

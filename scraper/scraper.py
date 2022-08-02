@@ -39,6 +39,7 @@ GROUP_URL = DOMAIN + '/groups/' + GROUP_ID
 SAVECSV = True
 SAVEDB = False
 LIMIT_ROW = 100
+GCP_BUCKET = 'test-image-example-1'
 
 get_db = init_db.get_db()
 
@@ -76,7 +77,7 @@ def main(mode = 'Update'):
 
     if mode == 'Init':
         ##### GET users info #####
-        init_user_collecting(driver,init_db.con,get_db,DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW)
+        init_user_collecting(driver,init_db.con,get_db,DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW,GCP_BUCKET)
         
         ##### GET post links #####
         _,post_count = get_post_link(driver,init_db.con,Depends(get_db),DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW)

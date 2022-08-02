@@ -98,7 +98,7 @@ def test_post_link(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,lim
     get_post_link(driver,db_conn,db,domain,group_url,savecsv,savedb,limit_row)
     
 
-def test_post_data(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limit_row):
+def test_post_data(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limit_row,gcp_bucket_name):
     
     df = pd.read_csv(os.path.join(ROOT_FILE,'result','post','post_links8.csv'),encoding='utf-8-sig',index_col=False)
     # df = pd.DataFrame(df)
@@ -110,7 +110,7 @@ def test_post_data(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,lim
             get_user_by_id(user_id,db)
             print("Exist")
         except:
-            scrape_user_data_by_id(driver,db_conn,db,domain,group_url,user_id,savedb = True)
+            scrape_user_data_by_id(driver,db_conn,db,domain,group_url,user_id,savedb = True,gcp_bucket_name=gcp_bucket_name)
             
     get_post_info(driver,db_conn,db,domain,group_url,savecsv,savedb,limit_row,tmp_posts)
     
