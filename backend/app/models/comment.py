@@ -1,6 +1,6 @@
 from uuid import uuid4
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import  Column, ForeignKey, String, DateTime, Float, Integer
+from sqlalchemy import  Column, ForeignKey, String, DateTime, Float, Integer,Text
 from sqlalchemy.orm import relationship
 from ..database.init_db import Base
 
@@ -9,7 +9,7 @@ class Comment(Base):
     __tablename__ = "comment"
 
     comment_id =  Column(String(100), primary_key=True)
-    comment_content = Column(String(2048))
+    comment_content = Column(Text)
     comment_username = Column(String(2048))
     comment_profile_url = Column(String(2048))
     comment_date = Column(DateTime)

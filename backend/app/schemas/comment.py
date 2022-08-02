@@ -10,7 +10,7 @@ class CommentCreate(CommentBase):
     comment_content:Optional[str] = None
     comment_username:str
     comment_profile_url:str
-    comment_date:datetime
+    comment_date:Optional[datetime] = None
     comment_reaction_count:Optional[int] = 0
     comment_score:Optional[float] = 0.0
     comment_date_scraped:Optional[datetime] = None
@@ -31,7 +31,7 @@ class ShowComment(BaseModel):
     comment_content:Optional[str] = None
     comment_username:str
     comment_profile_url:str
-    comment_date:datetime
+    comment_date:Optional[datetime] = None
     comment_reaction_count:Optional[int] = 0
     comment_score:Optional[float] = 0.0
     comment_date_scraped:Optional[datetime] = None

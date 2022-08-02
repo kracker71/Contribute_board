@@ -3,9 +3,8 @@ from sqlalchemy.orm import Session,load_only
 from app.models.post import Post
 from app.models.user import User
 from app.crud.user import get_user_by_id
-from app.schemas.post import PostBase, PostEdit
+from app.schemas.post import PostBase, PostEdit,PostCreate
 from app.database import init_db
-from backend.app.schemas.post import PostCreate
 
 def create_post(request:PostBase, db:Session):
     # Check if post already exist
