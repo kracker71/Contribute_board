@@ -7,13 +7,16 @@ from sqlalchemy.orm import Session
 
 from selenium.webdriver.common.by import By
 
+from utils.image import download_image
+from utils.gcp import upload_blob_from_memory,upload_blob
+
 import os
 import sys
 from pathlib import Path
 
 FILE = Path(__file__).resolve()
 ROOT_FILE = FILE.parents[0].parents[0]
-ROOT = FILE.parents[0].parents[0].parents[0]
+ROOT = ROOT_FILE.parents[0]
 PAGE = '/members'
 
 if str(ROOT) not in sys.path:
@@ -21,16 +24,16 @@ if str(ROOT) not in sys.path:
     
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
     
-from scraper.utils.image import download_image
-from scraper.utils.gcp import upload_blob_from_memory,upload_blob
 
 def image_upload(out_dir,img_url,file_name,local_save,
                  bucket_name,source_contents,destination_blob_name):
     
+    #Download image from url
     image_content = download_image(file_name=file_name,
                        img_url=img_url,
                        out_dir=out_dir,
                        local_save=local_save)
+
     if local_save:
         upload_blob(bucket_name=bucket_name,
                     source_file_name=source_contents,
@@ -40,16 +43,19 @@ def image_upload(out_dir,img_url,file_name,local_save,
                                 contents=image_content,
                                 destination_blob_name=destination_blob_name)
     
-def init_user_collecting(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limit_row,gcp_bucket_name):
+def init_user_collecting(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limit_row,gcp_bucket_name,is_scrape_page):
     
-    seed_url = group_url + PAGE
+    if is_scrape_page:
+        seed_url = group_url + PAGE + '/pages'
+    else:
+        seed_url = group_url + PAGE
         
     driver.get(seed_url)
     time.sleep(4)
     print('\n',"Scrolling")
     ##################################### Scrolling page #####################################
-    count = 0
-    cond = 0
+    count = 0 #count user numbers
+    cond = 0 #condition for stop scrolling
     scroll_pause_time = 1
 
     while True:
@@ -62,15 +68,17 @@ def init_user_collecting(driver,db_conn,db:Session,domain,group_url,savecsv,save
         # Check if None
         if info_blocks:
             info_block = info_blocks[-1]
-        else: break
+        else: 
+            print("No member in this group")
+            break
 
         users = info_block.find_elements(By.XPATH,"div")
         
-        #for dev
-        if len(users) > 10:
-            break
+        # #for dev
+        # if len(users) > 10:
+        #     break
         
-        # Break the loop when no more new post
+        # Break the loop when no more new user
         if  len(users) == count:
             cond+=1
             if cond == 5:
@@ -99,7 +107,8 @@ def init_user_collecting(driver,db_conn,db:Session,domain,group_url,savecsv,save
         
         data = []
         
-        user_info = user.find_element(By.XPATH,".//div[@class = 'ow4ym5g4 auili1gw rq0escxv j83agx80 buofh1pr g5gj957u i1fnvgqd oygrvhab cxmmr5t8 hcukyx3x kvgmc6g5 hpfvmrgz qt6c0cv9 jb3vyjys l9j0dhe7 du4w35lb bp9cbjyn btwxx1t3 dflh9lhu scb9dxdr nnctdnn4']//a[@class = 'oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz rq0escxv nhd2j8a9 nc684nl6 p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso i1ao9s8h esuyzwwr f1sip0of lzcic4wl gpro0wi8 oo9gr5id lrazzd5p']")
+        #Update 3/8/2022
+        user_info = user.find_element(By.XPATH,".//div[@class = 'goun2846 mk2mc5f4 ccm00jje s44p3ltw rt8b4zig sk4xxmp2 n8ej3o3l agehan2d rq0escxv j83agx80 buofh1pr g5gj957u i1fnvgqd kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x hpfvmrgz jb3vyjys qt6c0cv9 l9j0dhe7 du4w35lb bp9cbjyn btwxx1t3 dflh9lhu scb9dxdr nnctdnn4']//a[@class = 'oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz rq0escxv nhd2j8a9 nc684nl6 p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso i1ao9s8h esuyzwwr f1sip0of lzcic4wl gpro0wi8 oo9gr5id lrazzd5p']")
         if user_info:
             name = user_info.text
             user_href = user_info.get_attribute('href')
@@ -286,10 +295,11 @@ def scrape_user_data_by_id(driver,db_conn,db:Session,domain,group_url,user_id:st
     return df
     # First block is a group user that already collect above
     # tag_name = info_blocks.find_element()
-        
+    
+    
 def update_user(driver,domain,group_url,savecsv,limit_row,it_now,it_end):
     
-    seed_url += PAGE
+    seed_url = group_url+PAGE
     
     # First call function
     if it_now == 0:
