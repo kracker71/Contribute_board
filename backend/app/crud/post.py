@@ -13,17 +13,18 @@ def create_post(request:PostBase, db:Session):
         raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                             detail=f"post with an id {request.post_id} already existed")
 
-    post = Post(**request.__dict__)
+    post = Post(post_id = request.post_id,
+                post_url = request.post_url,
+                user_id = request.user_id,
+                post_is_update = request.post_is_update)
+    
     db.add(post)
     db.commit()
-    user = get_user_by_id(request.user_id, db)
-    post.user_id = user.user_id
-    db.commit()
-    db.refresh(post)
+    # db.refresh(post)
     return {'created'}
 
-def get_post(db:Session,limit = None,offset=0):
-    return db.query(Post).offset(offset).limit(limit).all()
+def get_post_scrape(db:Session,limit = None,offset=0):
+    return db.query(Post).offset(offset).limit(limit).options(load_only("post_id","post_url","post_comment_count")).all()
 
 def get_all_post_id(db:Session):
     return db.query(Post).options(load_only("post_id")).all()
@@ -68,11 +69,12 @@ def update_post_by_id(id, request:PostEdit, db:Session):
     db.commit()
     return {'updated'}
 
-def init_post_data_by_id(id:str, request:PostCreate, db:Session):
+def init_post_data_by_id(id:str,request:PostCreate, db:Session):
     post = db.query(Post).filter(Post.post_id == id)
     if not post.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"not found a post with an id {id}")
+    
     post.update(request,synchronize_session="fetch")
     db.commit()
     return {'updated'}

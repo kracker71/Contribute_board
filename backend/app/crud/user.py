@@ -1,9 +1,9 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session ,load_only
-from app.models.post import Post
-from app.models.comment import Comment
-from app.models.user import User
-from app.schemas.user import UserRegister,UserEditScore,UserEditProfile
+from ..models.post import Post
+from ..models.comment import Comment
+from ..models.user import User
+from ..schemas.user import UserRegister,UserEditScore,UserEditProfile
 
 def create_user(request:UserRegister,db:Session):
     # check if user already exist
@@ -13,7 +13,14 @@ def create_user(request:UserRegister,db:Session):
     if is_user_existed:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                             detail=f"user with an {request.user_id} already existed")
-    user = User(**request.__dict__)
+        
+    user = User(user_id = request.user_id,
+                user_name = request.user_name,
+                user_profile_url = request.user_profile_url,
+                user_profile_picture_url = request.user_profile_picture_url,
+                user_score = request.user_score,
+                user_update_score_date = request.user_update_score_date)
+    
     db.add(user)
     db.commit()
     return {'created'}
@@ -27,6 +34,14 @@ def get_user_by_id(id:str,db:Session):
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"not found a user with an {id}")
+    return user
+
+def get_user_by_name(name:str,db:Session):
+    user = db.query(User).filter(User.user_name == name).first()
+    
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"not found a user with an {name}")
     return user
 
 def get_score_order_by_ranking(db:Session):
@@ -87,7 +102,7 @@ def update_user_profile_by_id(id,request:UserEditProfile,db:Session):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"not found a user with an {id}")
         
-    user.update(request.__dict__, synchronize_session="fetch")
+    user.update(request, synchronize_session="fetch")
     db.commit()
     return {'updated'}
 
