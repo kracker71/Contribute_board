@@ -6,6 +6,8 @@ class PostBase(BaseModel):
     
     post_id: str
     post_url: str
+    user_id:str
+    post_is_update:Optional[bool] = False
     
 class PostCreate(PostBase):
     
