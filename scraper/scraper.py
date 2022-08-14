@@ -1,9 +1,10 @@
 import time
 from selenium import webdriver
 from dotenv import dotenv_values
+from utils.comment import comment_collecting
 from utils.user_manager import login,quit
 from utils.post import get_post_info,get_post_link
-from utils.user import init_user_collecting
+from utils.user import scrape_user_data
 
 from fastapi import Depends
 from sqlalchemy.orm import Session
@@ -28,7 +29,7 @@ ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
 import logging
 from backend.app.database import init_db
-from backend.app.crud.post import get_post
+from backend.app.crud.post import get_post_scrape
 
 # remove duplicated stream handler to avoid duplicated logging
 # logging.getLogger().removeHandler(logging.getLogger().handlers[0])
@@ -37,22 +38,17 @@ DOMAIN = 'https://www.facebook.com'
 GROUP_ID = '120212836680964'
 GROUP_URL = DOMAIN + '/groups/' + GROUP_ID
 SAVECSV = True
-SAVEDB = False
+SAVEDB = True
 LIMIT_ROW = 100
-GCP_BUCKET = 'test-image-example-1'
+GCP_BUCKET = 'test_create_example-1'
 
-get_db = init_db.get_db()
+get_db = init_db.get_session()
 
 def main(mode = 'Update'):
     print('\n',mode,'\n')
     #PATH to webdriver
     driver_PATH = os.path.join(FILE.parents[0],'chromedriver.exe')
     config = dotenv_values(os.path.join(FILE.parents[0],".env"))
-
-    # if mode == 'Init':
-    #     SEED_URL = GROUP_URL + '?sorting_setting=CHRONOLOGICAL'
-    # else:
-    #     SEED_URL = GROUP_URL + '?sorting_setting=RECENT_ACTIVITY' 
         
     COOKIE_PATH = os.path.join(FILE.parents[0],'cookies.pkl')
 
@@ -77,16 +73,19 @@ def main(mode = 'Update'):
 
     if mode == 'Init':
         ##### GET users info #####
-        init_user_collecting(driver,init_db.con,get_db,DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW,GCP_BUCKET)
+        scrape_user_data(driver,init_db.con,get_db,DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW,GCP_BUCKET,is_page_scrape=False)
         
         ##### GET post links #####
-        _,post_count = get_post_link(driver,init_db.con,Depends(get_db),DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW)
+        _,post_count = get_post_link(driver,init_db.con,get_db,DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW,GCP_BUCKET)
         
-        # #Query links from DB
-        for i in range(0,post_count,LIMIT_ROW):
-            post_links = get_post(Depends(get_db),LIMIT_ROW,i)
-            # #Get Post INFO
-            get_post_info(driver,init_db.con,Depends(get_db),DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW,post_links)
+        #Query links from DB
+        for i in range(0,64,LIMIT_ROW):
+            post_links = get_post_scrape(get_db,LIMIT_ROW,i)
+            # Get Post INFO
+            get_post_info(driver,init_db.con,get_db,DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW,GCP_BUCKET,post_links)
+            ##### GET post comment ####
+            #Get Comment data
+            comment_collecting(driver,init_db.con,get_db,DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW,GCP_BUCKET,post_links)
         
         
     quit(driver,COOKIE_PATH)

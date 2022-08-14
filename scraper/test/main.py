@@ -35,7 +35,7 @@ DOMAIN = 'https://www.facebook.com'
 GROUP_ID = '120212836680964'
 GROUP_URL = DOMAIN + '/groups/' + GROUP_ID
 SAVECSV = True
-SAVEDB = False
+SAVEDB = True
 LIMIT_ROW = 100
 GCP_BUCKET = 'test-image-example-1'
 
@@ -46,13 +46,13 @@ def test():
     # print("db =",get_db())
     driver = strat_driver()
     
-    # init_user_data(init_db.con,Depends(get_db))
+    # init_user_data(init_db.con,get_db)
     
-    # test_scrape_user_by_id(driver,init_db.con,Depends(get_db),DOMAIN,GROUP_URL,'100012595639507',SAVEDB,GCP_BUCKET)
+    test_scrape_user_by_id(driver,init_db.con,get_db,DOMAIN,GROUP_URL,'100002537388275',SAVEDB,GCP_BUCKET)
     
-    # init_post_links(init_db.con,Depends(get_db))
+    # init_post_links(init_db.con,get_db)
     
-    # test_post_link(driver,init_db.con,Depends(get_db),DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW)
+    # test_post_link(driver,init_db.con,get_db,DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW)
     
     # driver = 0
     # init_post_data(driver,init_db.con,get_db,DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW)
@@ -60,7 +60,7 @@ def test():
     # test_post_data(driver,init_db.con,get_db,DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW)
     
     # test_comment(driver,init_db.con,get_db,DOMAIN,SAVECSV,SAVEDB,LIMIT_ROW)
-    init_comment(driver,init_db.con,get_db,DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW,GCP_BUCKET)
+    # init_comment(driver,init_db.con,get_db,DOMAIN,GROUP_URL,SAVECSV,SAVEDB,LIMIT_ROW,GCP_BUCKET)
     
 def strat_driver():
     #PATH to webdriver

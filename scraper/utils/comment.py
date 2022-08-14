@@ -7,12 +7,16 @@ from selenium.webdriver.support.wait import WebDriverWait
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
+
+from utils.user import scrape_user_data,scrape_user_data_by_id
+
 from sqlalchemy.orm import Session
 
 import pandas as pd
 import os
 import sys
 from pathlib import Path
+
 
 FILE = Path(__file__).resolve()
 ROOT_FILE = FILE.parents[0].parents[0]
@@ -25,23 +29,46 @@ if str(ROOT / 'backend') not in sys.path:
 
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
-def comment_collecting(driver,db_conn,db:Session,domain,savecsv,savedb,limit_row,post_info,comment_number):
+from backend.app.crud.user import create_user, get_user_by_id, get_user_by_name, update_user_profile_by_id
+from backend.app.crud.comment import create_comment, get_comment_by_id, update_comment_by_id
+
+def comment_collecting(driver,db_conn,db:Session,domain,group_url,savecsv,savedb,limit_row,gcp_bucket_name,post_info):
     
+    # Initialize time
     now = time.localtime(time.time())
     datetime = time.strftime("%m/%d/%Y, %H:%M:%S", now)
-    # print(post_info)
-    for link,pid in post_info:
-        driver.get(link)
-        time.sleep(1)
     
-        #Change comment sorting
-        WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.XPATH,"//div[@class ='bp9cbjyn j83agx80 kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x h3fqq6jp']"))).click()
-        WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.XPATH,"//div[@class ='oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz p7hjln8o esuyzwwr f1sip0of n00je7tq arfg74bv qs9ysxi8 k77z8yql abiwlrkh p8dawk7l lzcic4wl dwo3fsh8 rq0escxv nhd2j8a9 j83agx80 btwxx1t3 pfnyh3mw opuu4ng7 kj2yoqh6 kvgmc6g5 oygrvhab pybr56ya dflh9lhu f10w8fjw scb9dxdr l9j0dhe7 i1ao9s8h du4w35lb bp9cbjyn' ]" )))
-        all_comment = driver.find_elements(By.XPATH,"//div[@class ='oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz p7hjln8o esuyzwwr f1sip0of n00je7tq arfg74bv qs9ysxi8 k77z8yql abiwlrkh p8dawk7l lzcic4wl dwo3fsh8 rq0escxv nhd2j8a9 j83agx80 btwxx1t3 pfnyh3mw opuu4ng7 kj2yoqh6 kvgmc6g5 oygrvhab pybr56ya dflh9lhu f10w8fjw scb9dxdr l9j0dhe7 i1ao9s8h du4w35lb bp9cbjyn' ]" )
-        all_comment[-1].click()
-        time.sleep(2)
+    all_comment_data = []
+    pos = 0
+    
+    #Log array
+    updated_comment = []
+    created_comment = []
+    fail_comment = []
+
+    for x in post_info:
+
+        link = x.post_url
+        pid = x.post_id
+        comment_number = x.post_comment_count
         
-        ##################################### Scrolling page #####################################
+        driver.get(link)
+        time.sleep(3)
+        
+        if comment_number == 0:
+            continue
+        
+        #Change comment sorting
+        try:
+            WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.XPATH,"//div[@class ='bp9cbjyn j83agx80 kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x h3fqq6jp']"))).click()
+            WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.XPATH,"//div[@class ='oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz p7hjln8o esuyzwwr f1sip0of n00je7tq arfg74bv qs9ysxi8 k77z8yql abiwlrkh p8dawk7l lzcic4wl dwo3fsh8 rq0escxv nhd2j8a9 j83agx80 btwxx1t3 pfnyh3mw opuu4ng7 kj2yoqh6 kvgmc6g5 oygrvhab pybr56ya dflh9lhu f10w8fjw scb9dxdr l9j0dhe7 i1ao9s8h du4w35lb bp9cbjyn' ]" )))
+            all_comment = driver.find_elements(By.XPATH,"//div[@class ='oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz p7hjln8o esuyzwwr f1sip0of n00je7tq arfg74bv qs9ysxi8 k77z8yql abiwlrkh p8dawk7l lzcic4wl dwo3fsh8 rq0escxv nhd2j8a9 j83agx80 btwxx1t3 pfnyh3mw opuu4ng7 kj2yoqh6 kvgmc6g5 oygrvhab pybr56ya dflh9lhu f10w8fjw scb9dxdr l9j0dhe7 i1ao9s8h du4w35lb bp9cbjyn']" )
+            all_comment[-1].click()
+            time.sleep(2)
+        except:
+            continue
+        
+        # Scrolling page 
         #Open all the comment's replies
         print("Opening all comment....")
         while True:
@@ -68,34 +95,52 @@ def comment_collecting(driver,db_conn,db:Session,domain,savecsv,savedb,limit_row
                     time.sleep(1)
             else :
                 break
-        ###########################################################################################
         print("All comment opened")
         
-        ##################################### Collecting Data #####################################
+        # Collecting Data 
         print("Collecting data")
+        
+        #Return to the top of page avoid selenium error
+        driver.execute_script("window.scrollTo(0, 0);")
         
         comment_soup = BeautifulSoup(driver.page_source, "html.parser")
         comments = comment_soup.find_all("div",{"class":"tw6a2znq sj5x9vvc d1544ag0 cxgpxx05"})
         comment_block = comment_soup.find_all("div",{"class":"rj1gh0hx buofh1pr ni8dbmo4 stjgntxs hv4rvrfc"})
-        
-        all_comment_data = []
-        pos = 0
-        
+
         if comments:
             for (comment,block) in zip(comments,comment_block):
                 data = []
                 user_comment = comment.findChildren("span" ,{"class":"nc684nl6"})[0]
-                # print(user_comment)
+
                 comment_content = comment.findChildren("div",{"class":"ecm0bbzt e5nlhep0 a8c37x1j"},recursive = False)
                 if comment_content:
                     content = comment_content[0].text
-                # print(comment_content)
                 
                 user_name = user_comment.text
+                
+                if not user_name:
+                    # print("Text didn't work")
+                    user_name = user_comment.get_attribute("innerHTML").split('<span>')[1].split('</span>')[0]
+                    
                 if "user/" not in user_comment.a['href']:
-                    user_id = user_comment.a['href'][25:].split("/")[0].split("?")[0]
+                    # user_id = user_comment.a['href'][25:].split("/")[0].split("?")[0]
+                    try:
+                        tmp_user = get_user_by_name(user_name,db)
+                        user_id = tmp_user.user_id
+                    except:
+                        driver.execute_script("window.open('');")
+                        driver.switch_to.window(driver.window_handles[1])
+                        time.sleep(0.5)
+                        scrape_user_data(driver,db_conn,db,domain,group_url,savecsv,savedb,limit_row,gcp_bucket_name,is_page_scrape=True)
+                        driver.close()
+                        driver.switch_to.window(driver.window_handles[0])
+                        time.sleep(0.5)
+                        
+                        tmp_user = get_user_by_name(name,db)
+                        user_id = tmp_user.user_id
                 else:
                     user_id = user_comment.a['href'].split("user/")[1].split("/")[0]
+                    
                 profile_link = urljoin(domain,user_id)
                 
                 
@@ -156,23 +201,64 @@ def comment_collecting(driver,db_conn,db:Session,domain,savecsv,savedb,limit_row
                     
                     ###### Post data to DB#########
                     if savedb:
-                        try:
-                            r = df.to_sql('comment',con = db_conn,if_exists='append', index=False)
-                            print('New Rows append =',r)
-                            print("POST SUCCESS")
-                            # db.commit()
-                        except :
-                            print("UNABLE TO POST TO DB")
+                        for comment_data in df.itertuples():
+
+                            temp_dict = {"comment_id":comment_data.comment_id,
+                                            "comment_content":comment_data.comment_content,
+                                            "comment_username":comment_data.comment_username,
+                                            "comment_profile_url":comment_data.comment_profile_url,
+                                            "comment_reaction_count":comment_data.comment_reaction_count,
+                                            "comment_score":comment_data.comment_score,
+                                            "comment_date_scraped":comment_data.comment_date_scraped,
+                                            "user_id":comment_data.user_id,
+                                            "post_id":comment_data.post_id}
+                            
+                            #Avoid user error
+                            try:
+                                get_user_by_id(comment_data.user_id,db)
+                                pass
+                            except:
+                                try:
+                                    driver.execute_script("window.open('');")
+                                    driver.switch_to.window(driver.window_handles[1])
+                                    time.sleep(1)
+                                    scrape_user_data_by_id(driver,db_conn,db,domain,group_url,comment_data.user_id,savedb,gcp_bucket_name)
+                                    driver.close()
+                                    driver.switch_to.window(driver.window_handles[0])
+                                    time.sleep(1)
+                                    
+                                    print("Created :",comment_data.user_id)
+                                except:
+                                    print("Fail... user id:",comment_data.user_id)
+                            
+                            # Post & Put comment data      
+                            try:
+                                get_comment_by_id(comment_data.comment_id,db)
+                                try:
+                                    update_comment_by_id(comment_data.comment_id,comment_data,db)
+                                    updated_comment.append(comment_data.comment_id)
+                                except:
+                                    print("UNABLE TO PUT {} TO DB".format(comment_data.comment_id))
+                                    fail_comment.append(comment_data.comment_id)
+                            except:
+                                try:
+                                    create_comment(comment_data,db)
+                                    # print("Created :",comment_data.comment_id)
+                                    created_comment.append(comment_data.comment_id)
+                                except:
+                                    # print("Fail... comment id:",comment_data.comment_id)
+                                    fail_comment.append(comment_data.comment_id)
+                        
                     ###############################
 
                     all_comment_data = []
                     
                 pos +=1
-    ###########################################################################################
+        else:
+            print("Can't find comment section")
 
     df = pd.DataFrame(all_comment_data,columns=["comment_id","comment_content","comment_username","comment_profile_url","comment_date","comment_reaction_count","comment_score","comment_date_scraped","user_id","post_id"])
-    # df.to_csv("comment.csv",encoding='utf-8-sig')
-    
+    # print(df)
     if savecsv:
         path = ROOT_FILE
         name = "comment{}.csv".format(pos+1)
@@ -185,14 +271,57 @@ def comment_collecting(driver,db_conn,db:Session,domain,savecsv,savedb,limit_row
     
     ###### Post data to DB#########
     if savedb:
-        try:
-            r = df.to_sql('comment',con = db_conn,if_exists='append', index=False)
-            print('New Rows append =',r)
-            print("POST SUCCESS")
-            # db.commit()
-        except :
-            print("UNABLE TO POST TO DB")
+        for comment_data in df.itertuples():
+    
+            temp_dict = {"comment_id":comment_data.comment_id,
+                            "comment_content":comment_data.comment_content,
+                            "comment_username":comment_data.comment_username,
+                            "comment_profile_url":comment_data.comment_profile_url,
+                            "comment_reaction_count":comment_data.comment_reaction_count,
+                            "comment_score":comment_data.comment_score,
+                            "comment_date_scraped":comment_data.comment_date_scraped,
+                            "user_id":comment_data.user_id,
+                            "post_id":comment_data.post_id}
+            
+            #Avoid user error
+            try:
+                get_user_by_id(comment_data.user_id,db)
+                pass
+            except:
+                try:
+                    driver.execute_script("window.open('');")
+                    driver.switch_to.window(driver.window_handles[1])
+                    time.sleep(1)
+                    scrape_user_data_by_id(driver,db_conn,db,domain,group_url,comment_data.user_id,savedb,gcp_bucket_name)
+                    driver.close()
+                    driver.switch_to.window(driver.window_handles[0])
+                    time.sleep(1)
+                    
+                    print("Created :",comment_data.user_id)
+                except:
+                    print("Fail... user id:",comment_data.user_id)
+            
+            # Post & Put comment data      
+            try:
+                get_comment_by_id(comment_data.comment_id,db)
+                try:
+                    update_comment_by_id(comment_data.comment_id,comment_data,db)
+                    updated_comment.append(comment_data.comment_id)
+                except:
+                    # print("UNABLE TO PUT {} TO DB".format(comment_data.comment_id))
+                    fail_comment.append(comment_data.comment_id)
+            except:
+                try:
+                    created_comment(comment_data,db)
+                    # print("Created :",comment_data.comment_id)
+                    created_comment.append(comment_data.comment_id)
+                except:
+                    print("Fail... comment id:",comment_data.comment_id)
+                    fail_comment.append(comment_data.comment_id)
+        
+    ###############################
 
     print("Task Done")
+    print("Created comment :",created_comment,"\nUpdated comment :",updated_comment,"\nFail comment :",fail_comment)
     
     return df
