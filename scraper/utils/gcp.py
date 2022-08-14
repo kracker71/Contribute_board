@@ -47,7 +47,7 @@ def upload_blob_from_memory(bucket_name, contents, destination_blob_name):
 
         blob.upload_from_string(contents)   
         print(
-            f"{destination_blob_name} with contents {contents} uploaded to {bucket_name}."
+            f"{destination_blob_name} uploaded to {bucket_name}."
         )
     except Exception as e:
         print(e)
@@ -72,8 +72,8 @@ def download_blob_into_memory(bucket_name, blob_name):
         contents = blob.download_as_string()
 
         print(
-            "Downloaded storage object {} from bucket {} as the following string: {}.".format(
-                blob_name, bucket_name, contents
+            "Downloaded storage object {} from bucket {} .".format(
+                blob_name, bucket_name
             )
         )
         return contents
