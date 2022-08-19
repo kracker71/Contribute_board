@@ -12,6 +12,7 @@ from app.crud.post import (
 from app.database import init_db
 from sqlalchemy.orm import Session
 from app.schemas.post import PostBase, PostEdit, ShowPost
+from app.core.authentication import validate_token
 
 router = APIRouter(
     prefix="/post",
@@ -22,7 +23,7 @@ router = APIRouter(
 get_db = init_db.get_db
 
 @router.post('/add_post', status_code=status.HTTP_201_CREATED)
-async def add_post(request: PostBase, db: Session = Depends(get_db)):
+async def add_post(request: PostBase, db: Session = Depends(get_db),token = Depends(validate_token)):
     return create_post(request, db)
 
 @router.get('/all')
@@ -42,9 +43,9 @@ async def get_score_by_id(id,db:Session = Depends(get_db)):
     return get_post_score_by_id(id,db)
 
 @router.put('/update/{id}',status_code=status.HTTP_202_ACCEPTED)
-async def update_post_by_ID(id,request:PostEdit,db:Session = Depends(get_db)):
+async def update_post_by_ID(id,request:PostEdit,db:Session = Depends(get_db),token = Depends(validate_token)):
     return update_post_by_id(id,request,db)
 
 @router.delete("/delete/{id}",status_code=status.HTTP_204_NO_CONTENT)
-async def delete_post_by_id(id,db:Session = Depends(get_db)):
+async def delete_post_by_id(id,db:Session = Depends(get_db),token = Depends(validate_token)):
     return del_post_by_id(id,db)
