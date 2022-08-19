@@ -29,7 +29,7 @@ ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 
 import logging
 from backend.app.database import init_db
-from scraper.utils.user_manager import login
+from scraper.utils.webdriver_manager import login
 
 DOMAIN = 'https://www.facebook.com'
 GROUP_ID = '120212836680964'

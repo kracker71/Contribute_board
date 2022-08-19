@@ -1,5 +1,6 @@
 import time
 import pickle
+from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -72,6 +73,20 @@ def load_cookie(driver, cookie_path):
          cookies = pickle.load(cookiesfile)
          for cookie in cookies:
              driver.add_cookie(cookie)
+             
+def start_driver():
+    #PATH to webdriver
+    driver_PATH = os.path.join(FILE.parents[0].parents[0],'chromedriver.exe')
+    
+    chrome_options = webdriver.ChromeOptions()
+    prefs = {"profile.default_content_setting_values.notifications" : 2}
+    chrome_options.add_experimental_option("prefs",prefs)
+
+    #specify the path to chromedriver.exe (download and save on your computer)
+    #start the session
+    driver = webdriver.Chrome(driver_PATH, chrome_options=chrome_options)
+
+    return driver
 
 def close_all(driver):
     # close all open tabs

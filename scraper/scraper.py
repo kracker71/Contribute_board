@@ -2,7 +2,7 @@ import time
 from selenium import webdriver
 from dotenv import dotenv_values
 from utils.comment import comment_collecting
-from utils.user_manager import login,quit
+from utils.webdriver_manager import login,quit
 from utils.post import get_post_info,get_post_link
 from utils.user import scrape_user_data
 
