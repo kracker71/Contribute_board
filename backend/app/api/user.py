@@ -20,6 +20,8 @@ from app.crud.user import (
     get_comments_by_user_id,
     get_user_comments_score,
 )
+from app.core.authentication import validate_token
+# from app.main import oauth2_scheme
 router = APIRouter(
     prefix="/user",
     tags=["User"],
@@ -28,7 +30,7 @@ router = APIRouter(
 get_db = init_db.get_db
 
 @router.post("/create",response_model=ShowUser,status_code=status.HTTP_201_CREATED)
-async def user_create(request:UserRegister,db:Session = Depends(get_db)):
+async def user_create(request:UserRegister,db:Session = Depends(get_db),token = Depends(validate_token)):
     return create_user(request,db)
 
 @router.get("/all",response_model=List[ShowUser])
@@ -48,11 +50,11 @@ async def get_score_order_by_Rank(db:Session = Depends(get_db)):
     return get_score_order_by_ranking(db)
 
 @router.put("/update/score/all",status_code=status.HTTP_202_ACCEPTED)
-async def update_all_user_Score(request:UserEditScore,db :Session = Depends(get_db)):
+async def update_all_user_Score(request:UserEditScore,db :Session = Depends(get_db),token = Depends(validate_token)):
     return update_all_user_score(request,db)
 
 @router.put("/update/score/{id}",status_code=status.HTTP_202_ACCEPTED)
-async def update_score_by_ID(id,request:UserEditScore,db :Session = Depends(get_db)):
+async def update_score_by_ID(id,request:UserEditScore,db :Session = Depends(get_db),token = Depends(validate_token)):
     return update_user_score_by_id(id,request,db)
 
 @router.put("/update/profile/{id}",status_code=status.HTTP_202_ACCEPTED)
@@ -60,7 +62,7 @@ async def update_profile_by_ID(id,request:UserEditProfile,db :Session = Depends(
     return update_user_profile_by_id(id,request,db)
 
 @router.delete("/delete/{id}",status_code=status.HTTP_204_NO_CONTENT)
-async def delete_user_by_id(id,db:Session = Depends(get_db)):
+async def delete_user_by_id(id,db:Session = Depends(get_db),token = Depends(validate_token)):
     return del_user_by_id(id,db)
 
 #####post section#####
