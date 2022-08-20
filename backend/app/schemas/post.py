@@ -33,14 +33,13 @@ class PostEdit(PostBase):
     post_scraped_date: datetime
     post_is_update:Optional[bool] = False
     
-class PostScoring(PostBase):
+class PostScoring(BaseModel):
     
     post_score: float
-    post_scraped_date: datetime
     post_class:Optional[int] = None
 
 class ShowPost(BaseModel):
-
+    
     post_url: str
     post_date: datetime
     post_username:str
@@ -53,6 +52,18 @@ class ShowPost(BaseModel):
     post_score:  Optional[float] = 0.0
     post_scraped_date: Optional[datetime] = None
     post_class:Optional[int] = None
+
+    class Config:
+        orm_mode=True
+        
+class ShowPostData(BaseModel):
+
+    post_id: str
+    post_content: Optional[str] = None
+    post_shared_content: Optional[str] = None
+    post_reaction_count: Optional[int] = 0
+    post_comment_count: Optional[int] = 0
+    post_shared_count: Optional[int] = 0
 
     class Config:
         orm_mode=True

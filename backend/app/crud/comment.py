@@ -1,11 +1,11 @@
 from fastapi import HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session,load_only
 from app.models.comment import Comment
 from app.models.user import User
 from app.models.post import Post
 from app.crud.post import get_post_id_by_url
 from app.crud.user import get_user_by_id
-from app.schemas.comment import CommentCreate,CommentEdit
+from app.schemas.comment import CommentCreate,CommentEdit,CommentScoring
 
 def create_comment(request:CommentCreate,db:Session):
     is_comment_existed = db.query(Comment).filter(Comment.comment_id == request.comment_id).first()
@@ -26,6 +26,12 @@ def create_comment(request:CommentCreate,db:Session):
     db.commit()
     return {'created'}
 
+def get_comment_data(db:Session):
+    return db.query(Post).options(load_only("comment_id",
+                                            "comment_content",
+                                            "comment_reaction_count",
+                                            )).all()
+
 def get_comment_by_id(id,db:Session):
     comment = db.query(Comment).filter(Comment.comment_id == id).first()
     if not comment:
@@ -44,7 +50,7 @@ def get_comment_score_by_id(id,db:Session):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"not found a comment with an id: {id}")
     return comment.comment_score
 
-def update_comment_by_id(id:str,request:CommentEdit,db:Session):
+def update_comment_data_by_id(id:str,request:CommentEdit,db:Session):
     comment = db.query(Comment).filter(Comment.comment_id == id)
     
     if not comment.first():
@@ -55,6 +61,17 @@ def update_comment_by_id(id:str,request:CommentEdit,db:Session):
                     "comment_reaction_count":request.comment_reaction_count,
                     "comment_score":request.comment_score,
                     "comment_date_scraped":request.comment_date_scraped},synchronize_session="fetch")
+    db.commit()
+    return {'updated'}
+
+def update_comment_score_by_id(id:str,request:CommentScoring,db:Session):
+    comment = db.query(Comment).filter(Comment.comment_id == id)
+    
+    if not comment.first():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"not found a comment with an id: {id}")
+    
+    comment.update({"comment_score":request.comment_score,
+                    "comment_class":request.comment_class},synchronize_session="fetch")
     db.commit()
     return {'updated'}
 

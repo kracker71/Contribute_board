@@ -25,6 +25,11 @@ class CommentEdit(CommentBase):
     comment_score:float
     comment_date_scraped:datetime
     
+class CommentScoring(BaseModel):
+        
+    comment_score: float
+    comment_class:Optional[int] = None
+    
 class ShowComment(BaseModel):
     
     comment_id:str
@@ -37,6 +42,15 @@ class ShowComment(BaseModel):
     comment_date_scraped:Optional[datetime] = None
     
     post_id:str
+    
+    class Config:
+        orm_mode=True
+
+class ShowCommentData(BaseModel):
+    
+    comment_id:str
+    comment_content:Optional[str] = None
+    comment_reaction_count:Optional[int] = 0
     
     class Config:
         orm_mode=True
