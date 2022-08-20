@@ -13,14 +13,17 @@ def create_comment(request:CommentCreate,db:Session):
         raise HTTPException(status_code=status.HTTP_409_CONFLICT,
         detail=f"comment with an id {request.comment_id} already existed")
 
-    comment = Comment(**request.__dict__)
+    comment = Comment(comment_id=request.comment_id,
+                    comment_content=request.comment_content,
+                    comment_username=request.comment_username,
+                    comment_profile_url=request.comment_profile_url,
+                    comment_reaction_count=request.comment_reaction_count,
+                    comment_score=request.comment_score,
+                    comment_date_scraped=request.comment_date_scraped,
+                    user_id=request.user_id,
+                    post_id=request.post_id)
     db.add(comment)
-    post_id = get_post_id_by_url(request.post_id,db)
-    user_id = get_user_by_id(request.user_id,db)
-    comment.post_id = post_id
-    comment.user_id = user_id
     db.commit()
-    db.refresh(comment)
     return {'created'}
 
 def get_comment_by_id(id,db:Session):
@@ -41,13 +44,17 @@ def get_comment_score_by_id(id,db:Session):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"not found a comment with an id: {id}")
     return comment.comment_score
 
-def update_comment_by_id(id,request:CommentEdit,db:Session):
+def update_comment_by_id(id:str,request:CommentEdit,db:Session):
     comment = db.query(Comment).filter(Comment.comment_id == id)
     
     if not comment.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"not found a comment with an id: {id}")
     
-    comment.update(request.__dict__,synchronize_session="fetch")
+    comment.update({"comment_id":request.comment_id,
+                    "comment_content":request.comment_content,
+                    "comment_reaction_count":request.comment_reaction_count,
+                    "comment_score":request.comment_score,
+                    "comment_date_scraped":request.comment_date_scraped},synchronize_session="fetch")
     db.commit()
     return {'updated'}
 

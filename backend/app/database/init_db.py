@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
+from sqlalchemy.orm import Session
 
 dotenv_path = os.path.join(os.path.dirname(
     os.path.dirname(os.path.dirname(__file__))), '.env')
@@ -21,6 +22,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
+con = engine.connect()
 
 def get_db():
     db = SessionLocal()
@@ -29,3 +31,5 @@ def get_db():
     finally:
         db.close()
 
+def get_session():
+    return SessionLocal()

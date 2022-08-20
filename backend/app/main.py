@@ -23,7 +23,7 @@ app.include_router(comment.router)
 def hello():
     return "hello world"
 
-app.include_router(user.router)
+# app.include_router(user.router)
 
 
 if __name__ == '__main__':

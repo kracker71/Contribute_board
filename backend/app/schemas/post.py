@@ -1,32 +1,58 @@
 from typing import List, Optional
-from datetime import date
-from uuid import UUID
+from datetime import datetime
 from pydantic import BaseModel
 
 class PostBase(BaseModel):
+    
     post_id: str
-    post_content: str
     post_url: str
-    post_scraped_date: Optional[date] = None
-    post_date: Optional[date] = None
-    post_score:  Optional[float] = 0.0
-    post_reaction_count: int
+    user_id:str
+    post_is_update:Optional[bool] = False
+    
+class PostCreate(PostBase):
+    
+    post_date: datetime
+    post_username:str
     post_profile_url:str
+    post_content: Optional[str] = None
+    post_shared_content: Optional[str] = None
+    post_reaction_count: Optional[int] = 0
+    post_comment_count: Optional[int] = 0
+    post_shared_count: Optional[int] = 0
+    post_score:  Optional[float] = 0.0
+    post_scraped_date: Optional[datetime] = None
+    post_is_update:Optional[bool] = False
 
-class PostEdit(BaseModel):
-    post_data: str
-    date_scrape: date
+class PostEdit(PostBase):
+    post_content: Optional[str] = None
+    post_shared_content: Optional[str] = None
+    post_reaction_count: Optional[int] = 0
+    post_comment_count: Optional[int] = 0
+    post_shared_count: Optional[int] = 0
     post_score: float
+    post_scraped_date: datetime
+    post_is_update:Optional[bool] = False
+    
+class PostScoring(PostBase):
+    
+    post_score: float
+    post_scraped_date: datetime
+    post_class:Optional[int] = None
 
 class ShowPost(BaseModel):
-    user_url:int
+
     post_url: str
-    post_id: str
-    post_data: str
-    date_scrape: Optional[date] = None
-    date_post: Optional[date] = None
+    post_date: datetime
+    post_username:str
+    post_profile_url:str
+    post_content: Optional[str] = None
+    post_shared_content: Optional[str] = None
+    post_reaction_count: Optional[int] = 0
+    post_comment_count: Optional[int] = 0
+    post_shared_count: Optional[int] = 0
     post_score:  Optional[float] = 0.0
-    post_likes: int
+    post_scraped_date: Optional[datetime] = None
+    post_class:Optional[int] = None
 
     class Config:
         orm_mode=True
